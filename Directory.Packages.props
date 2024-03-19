@@ -1,0 +1,19 @@
+<Project>
+
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+
+  <ItemGroup>
+
+    <!-- Transitive, referenced by Swashbuckle.AspNetCore -->
+    <PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="8.0.3" />
+    <PackageVersion Include="Microsoft.OpenApi" Version="1.6.14" />
+
+    <!-- Sample: WebApi -->
+    <!-- <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" /> -->
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+</Project>
