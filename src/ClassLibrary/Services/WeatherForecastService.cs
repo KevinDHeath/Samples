@@ -1,8 +1,6 @@
-﻿using ClassLibrary.Models;
+﻿namespace ClassLibrary.Services;
 
-namespace ClassLibrary.Services;
-
-public class WeatherForecastService : IWeatherForecastService
+public class WeatherForecastService : BaseService, IWeatherForecastService
 {
 	public virtual IEnumerable<WeatherForecast> Get()
 	{

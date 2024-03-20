@@ -7,6 +7,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder( args );
 _ = builder.Services.AddRazorComponents()
 	.AddInteractiveServerComponents();
 _ = builder.Services.AddScoped<IWeatherForecastService, WeatherForecastServiceEx>();
+_ = builder.Services.AddScoped<IMovieReviewService, MovieReviewService>();
 
 WebApplication app = builder.Build();
 

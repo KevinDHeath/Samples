@@ -1,6 +1,4 @@
-﻿using ClassLibrary.Models;
-
-namespace ClassLibrary.Services;
+﻿namespace ClassLibrary.Services;
 
 public interface IWeatherForecastService
 {

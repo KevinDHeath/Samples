@@ -10,6 +10,7 @@ _ = builder.Services.AddControllers();
 _ = builder.Services.AddEndpointsApiExplorer();
 _ = builder.Services.AddSwaggerGen();
 _ = builder.Services.AddScoped<IWeatherForecastService, WeatherForecastServiceEx>();
+_ = builder.Services.AddScoped<IMovieReviewService, MovieReviewService>();
 
 WebApplication app = builder.Build();
 

@@ -4,3 +4,7 @@ GET {{ASPNETCoreWebAPI_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+GET {{ASPNETCoreWebAPI_HostAddress}}/moviereview/
+Accept: application/json
+
+###
