@@ -1,8 +1,18 @@
 {
-    "cSpell.words": [
-        "Antiforgery",
-        "ASPNETCORE",
-        "Blazor",
-        "Hsts"
-    ]
+  "cSpell.enableFiletypes": [
+    "!jsonc",
+    "!plaintext"
+  ],
+  "cSpell.words": [
+    "Antiforgery",
+    "ASPNETCORE",
+    "Blazor",
+    "Hsts"
+  ],
+  "dotnet.defaultSolution": ".\\Samples.sln",
+  "files.autoSave": "onFocusChange",
+  "files.exclude": {
+    "**/.vs": true,
+  },
+  "terminal.integrated.enablePersistentSessions": false
 }
