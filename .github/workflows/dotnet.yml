@@ -111,7 +111,7 @@ jobs:
         if: env.DOTNET_PACK == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}-Packages
+          name: ${{ github.event.repository.name }}-${{ inputs.artifact-folder }}
           path: ${{ env.ARTIFACT_PATH }}
           retention-days: 10
 

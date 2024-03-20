@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<coverage version="1.0" date="2024-03-20_15-01-28" tag="">
+  <assembly name="ClassLibrary">
+    <class name="ClassLibrary.BaseService" coveredlines="0" coverablelines="38" totallines="61" coveredbranches="0" totalbranches="14" coveredcodeelements="0" totalcodeelements="4" />
+    <class name="ClassLibrary.Models.Movie" coveredlines="0" coverablelines="5" totallines="14" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="5" />
+    <class name="ClassLibrary.Models.MovieReview" coveredlines="0" coverablelines="4" totallines="12" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="4" />
+    <class name="ClassLibrary.Models.WeatherForecast" coveredlines="0" coverablelines="5" totallines="14" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="5" />
+    <class name="ClassLibrary.Services.MovieReviewService" coveredlines="0" coverablelines="6" totallines="14" coveredbranches="0" totalbranches="2" coveredcodeelements="0" totalcodeelements="3" />
+    <class name="ClassLibrary.Services.WeatherForecastService" coveredlines="0" coverablelines="20" totallines="29" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="3" />
+    <class name="ClassLibrary.Services.WeatherForecastServiceEx" coveredlines="0" coverablelines="3" totallines="9" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="1" />
+    <class name="ClassLibrary.WeatherCalculator" coveredlines="9" coverablelines="12" totallines="26" coveredbranches="10" totalbranches="10" coveredcodeelements="1" totalcodeelements="2" />
+  </assembly>
+</coverage>
