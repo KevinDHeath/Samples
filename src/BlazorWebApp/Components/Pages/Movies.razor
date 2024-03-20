@@ -1,0 +1,35 @@
+﻿@page "/movies"
+@inject IMovieReviewService MovieReviewService
+@attribute [StreamRendering]
+
+<PageTitle>Index</PageTitle>
+
+<h1>Movies</h1>
+
+@if( MovieList is null )
+{
+  <h3>Loading...</h3>
+}
+else
+{
+  @for( int x = 0; x <= MovieList.Count / 4; x++ )
+  {
+    Movie[] movieGroup = MovieList.Skip( x * 4 ).Take(4).ToArray();
+
+    <div class="row">
+      @foreach( Movie movie in movieGroup )
+      {
+        <MovieItem Movie="@movie" />
+      }
+    </div>
+  }
+}
+
+@code {
+  List<Movie>? MovieList = null;
+
+  protected override async Task OnInitializedAsync()
+  {
+    MovieList = await MovieReviewService.GetMovies();
+  }
+}
