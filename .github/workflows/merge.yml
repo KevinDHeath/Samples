@@ -11,5 +11,6 @@ jobs:
     if: github.event.pull_request.merged == true
     uses: ./.github/workflows/dotnet.yml # In same repository, uses file from same commit as the calling workflow
     with:
-      runs-on: 'ubuntu-latest'
       build-config: 'Release'
+      artifact-folder: ""
+      nuget-push: false

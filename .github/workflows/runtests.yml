@@ -47,7 +47,7 @@ jobs:
         shell: pwsh
         run: .\tests\RunTests.ps1 ${{ env.ARTIFACT_PATH }}
 
-      - name: UnitTesting coverage report
+      - name: xUnitTests coverage report
         if: ${{ inputs.artifact-folder != '' }}
         uses: danielpalme/ReportGenerator-GitHub-Action@5.2.2
         with:
@@ -56,7 +56,7 @@ jobs:
           reporttypes: 'Html;Badges;MarkdownSummaryGithub'
           historydir: ${{ env.ARTIFACT_PATH }}\TestResults\xunittestproject\history
           verbosity: 'Warning'
-          title: 'xUnitTestProject'
+          title: 'xUnitTests'
           customSettings: 'settings:createSubdirectoryForAllReportTypes=true'
           toolpath: 'reportgeneratortool'
 
