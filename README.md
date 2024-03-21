@@ -6,5 +6,5 @@
 [![git-hub-actions-workflow-status](https://img.shields.io/github/actions/workflow/status/kevindheath/samples/runtests.yml?style=plastic&label=%F0%9F%9A%A5%20Run%20Tests)](https://github.com/kevindheath/samples/actions/workflows/runtests.yml)
 [![git-hub-actions-workflow-status](https://img.shields.io/github/actions/workflow/status/kevindheath/samples/publish.yml?style=plastic&label=%F0%9F%93%A6%20Publish%20Packages)](https://github.com/kevindheath/samples/actions/workflows/publish.yml)
 
-This repository containing projects generated using the .NET templates that can be used by Visual Studio Code _and_ Visual Studio.\
-_[Documentation can be found on the Wiki pages.](https://github.com/kevindheath/samples/wiki/Home)_
+The documentation for this repository can be found on the 
+_[Wiki pages.](https://github.com/kevindheath/samples/wiki/Home)_

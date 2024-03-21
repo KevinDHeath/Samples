@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(PackageReadmeFile)' != ''">
-    <None Include="..\..\icon.png" Pack="true" PackagePath="" Visible="false" />
+    <None Include="..\..\docs\icon.png" Pack="true" PackagePath="" Visible="false" />
     <None Include="..\..\LICENSE" Pack="true" PackagePath="" Visible="false" />
   </ItemGroup>
 
