@@ -5,6 +5,7 @@
 
 _[Nn]otes.txt
 *.zip
+.vscode/
 
 # User-specific files
 *.rsuser
