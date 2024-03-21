@@ -1,0 +1,69 @@
+name: 🚥 Run Tests
+
+on:
+  # Triggering manually prompting for input values
+  workflow_dispatch:
+    inputs:
+      run-name:
+        description: A name for the run
+        type: string
+        required: true
+      runs-on:
+        description: The runner type to use
+        type: choice
+        options: 
+        - ubuntu-latest
+        - windows-latest
+        default: ubuntu-latest
+      artifact-folder:
+        description: Folder for any artifacts
+        type: string
+        default: Tests
+
+run-name: ${{ inputs.run-name }}
+
+env:
+  ARTIFACT_PATH: ${{ github.workspace }}/${{ inputs.artifact-folder }}
+
+jobs:
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ${{ inputs.runs-on }}
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create artifacts folder
+        if: ${{ inputs.artifact-folder != '' }}
+        run: mkdir ${{ env.ARTIFACT_PATH }}
+
+      - name: Restore dependencies
+        run: dotnet restore /property:Configuration=Debug
+
+      - name: Run all tests
+        shell: pwsh
+        run: .\tests\RunTests.ps1 ${{ env.ARTIFACT_PATH }}
+
+      - name: xUnitTests coverage report
+        if: ${{ inputs.artifact-folder != '' }}
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.2.2
+        with:
+          reports: ${{ env.ARTIFACT_PATH }}\TestResults\xunittestproject\*\coverage.cobertura.xml
+          targetdir: ${{ env.ARTIFACT_PATH }}\TestResults\xunittestproject\reports
+          reporttypes: 'Html;Badges;MarkdownSummaryGithub'
+          historydir: ${{ env.ARTIFACT_PATH }}\TestResults\xunittestproject\history
+          verbosity: 'Warning'
+          title: 'xUnitTests'
+          customSettings: 'settings:createSubdirectoryForAllReportTypes=true'
+          toolpath: 'reportgeneratortool'
+
+      - name: Upload artifacts
+        if: ${{ inputs.artifact-folder != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.event.repository.name }}-${{ inputs.artifact-folder }}
+          path: ${{ env.ARTIFACT_PATH }}
+          retention-days: 5

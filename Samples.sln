@@ -3,21 +3,32 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E484F99E-BD8F-4F06-8826-6E16D375095E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repository Items", "Repository Items", "{F39F2ADB-3FEC-4F79-9498-DA62DB579252}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		Directory.Packages.props = Directory.Packages.props
 		LICENSE = LICENSE
 		README.md = README.md
-		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASPNETCoreWebAPI", "src\ASPNETCoreWebAPI\ASPNETCoreWebAPI.csproj", "{6761BA51-0966-46E6-AF09-4A2FCCE1424E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E484F99E-BD8F-4F06-8826-6E16D375095E}"
+	ProjectSection(SolutionItems) = preProject
+		src\Directory.Build.props = src\Directory.Build.props
+		src\Directory.Build.targets = src\Directory.Build.targets
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebApp", "src\BlazorWebApp\BlazorWebApp.csproj", "{D1F4D72C-7272-4D9C-A10C-9019DCBC5727}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASPNETCoreWebAPI", "src\ASPNETCoreWebAPI\ASPNETCoreWebAPI.csproj", "{6761BA51-0966-46E6-AF09-4A2FCCE1424E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLibrary", "src\ClassLibrary\ClassLibrary.csproj", "{EFF4334A-20D3-474C-9788-9EE005CD0445}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWebApp", "src\BlazorWebApp\BlazorWebApp.csproj", "{D1F4D72C-7272-4D9C-A10C-9019DCBC5727}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassLibrary", "src\ClassLibrary\ClassLibrary.csproj", "{EFF4334A-20D3-474C-9788-9EE005CD0445}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{07E20368-EB81-4069-BDC7-A67F101D4556}"
+	ProjectSection(SolutionItems) = preProject
+		tests\RunTests.ps1 = tests\RunTests.ps1
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xUnitTestProject", "tests\xUnitTestProject\xUnitTestProject.csproj", "{908DF14B-92AF-42DC-9B45-632038B93D96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,17 +37,18 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{6761BA51-0966-46E6-AF09-4A2FCCE1424E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6761BA51-0966-46E6-AF09-4A2FCCE1424E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6761BA51-0966-46E6-AF09-4A2FCCE1424E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6761BA51-0966-46E6-AF09-4A2FCCE1424E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D1F4D72C-7272-4D9C-A10C-9019DCBC5727}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D1F4D72C-7272-4D9C-A10C-9019DCBC5727}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1F4D72C-7272-4D9C-A10C-9019DCBC5727}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1F4D72C-7272-4D9C-A10C-9019DCBC5727}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EFF4334A-20D3-474C-9788-9EE005CD0445}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EFF4334A-20D3-474C-9788-9EE005CD0445}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFF4334A-20D3-474C-9788-9EE005CD0445}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFF4334A-20D3-474C-9788-9EE005CD0445}.Release|Any CPU.Build.0 = Release|Any CPU
+		{908DF14B-92AF-42DC-9B45-632038B93D96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{908DF14B-92AF-42DC-9B45-632038B93D96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{908DF14B-92AF-42DC-9B45-632038B93D96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,5 +57,6 @@ Global
 		{6761BA51-0966-46E6-AF09-4A2FCCE1424E} = {E484F99E-BD8F-4F06-8826-6E16D375095E}
 		{D1F4D72C-7272-4D9C-A10C-9019DCBC5727} = {E484F99E-BD8F-4F06-8826-6E16D375095E}
 		{EFF4334A-20D3-474C-9788-9EE005CD0445} = {E484F99E-BD8F-4F06-8826-6E16D375095E}
+		{908DF14B-92AF-42DC-9B45-632038B93D96} = {07E20368-EB81-4069-BDC7-A67F101D4556}
 	EndGlobalSection
 EndGlobal

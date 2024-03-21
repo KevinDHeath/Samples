@@ -84,9 +84,9 @@ jobs:
     steps:
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # In different repository, @=release tag, branch name, commit sha
 
-      # - name: Setup .NET
+      # - name: Setup .NET version
       #   uses: actions/setup-dotnet@v4
       #   with:
       #     dotnet-version: 8.0.x
@@ -111,7 +111,7 @@ jobs:
         if: env.DOTNET_PACK == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}-Packages
+          name: ${{ github.event.repository.name }}-${{ inputs.artifact-folder }}
           path: ${{ env.ARTIFACT_PATH }}
           retention-days: 10
 

@@ -4,12 +4,31 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AssemblyTitle>Data Extensions</AssemblyTitle>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <!-- Package Information -->
+  <PropertyGroup>
+    <Version>1.0.0</Version>
+    <PackageReleaseNotes>* Initial version</PackageReleaseNotes>
+    <PackageId>kdheath.Data.Extensions</PackageId>
+    <PackageDescription>The Data.Extensions package is a test for automated NuGet uploads.</PackageDescription>
+    <PackageTags>services;models;json;csharp;dotnet</PackageTags>
+    <PackageProjectUrl>https://github.com/kevindheath/samples/blob/main/docs/ClassLibrary/README.md</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
     <None Update="Data\Movies.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <!-- IMPORTANT: add common resources as links -->
+    <None Include="..\..\docs\ClassLibrary\README.md" Pack="true" PackagePath="" Link="Properties\README.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="xUnitTestProject" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,20 @@
+<Project>
+  <!-- These items can be overridden in the project -->
+  <!-- https://learn.microsoft.com/en-us/visualstudio/msbuild/customize-by-directory -->
+
+  <PropertyGroup>
+    <Authors>Kevin Heath</Authors>
+    <Copyright>Copyright © $([System.DateTime]::Now.Year) KevinDHeath</Copyright>
+    <Product>Sample .NET Projects</Product>
+    <DebugType Condition="'$(Configuration)' == 'Release'">Embedded</DebugType> <!-- NuGet Health: Compiler Flags -->
+    <RepositoryUrl>https://github.com/kevindheath/samples</RepositoryUrl>
+   </PropertyGroup>
+
+  <!-- Local builds -->
+  <PropertyGroup>
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/8.0/source-link -->
+    <IncludeSourceRevisionInInformationalVersion Condition="'$(Configuration)' != 'Release'">false</IncludeSourceRevisionInInformationalVersion>
+    <IsPackable>false</IsPackable>
+ </PropertyGroup>
+
+</Project>
