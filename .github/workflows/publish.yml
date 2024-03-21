@@ -10,5 +10,5 @@ jobs:
     uses: ./.github/workflows/dotnet.yml # In same repository, uses file from same commit as the calling workflow
     with:
       build-config: 'Release'
-      artifact-folder: 'Packages'
+      artifact-folder: 'NuGet'
       nuget-push: true
