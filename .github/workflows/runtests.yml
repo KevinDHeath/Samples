@@ -18,7 +18,7 @@ on:
       artifact-folder:
         description: Folder for any artifacts
         type: string
-        default: Tests
+        default: UnitTests
 
 run-name: ${{ inputs.run-name }}
 
@@ -51,10 +51,10 @@ jobs:
         if: ${{ inputs.artifact-folder != '' }}
         uses: danielpalme/ReportGenerator-GitHub-Action@5.2.2
         with:
-          reports: ${{ env.ARTIFACT_PATH }}\TestResults\xunittestproject\*\coverage.cobertura.xml
-          targetdir: ${{ env.ARTIFACT_PATH }}\TestResults\xunittestproject\reports
+          reports: ${{ env.ARTIFACT_PATH }}/TestResults/xunittestproject/*/coverage.cobertura.xml
+          targetdir: ${{ env.ARTIFACT_PATH }}/TestResults/xunittestproject/reports
           reporttypes: 'Html;Badges;MarkdownSummaryGithub'
-          historydir: ${{ env.ARTIFACT_PATH }}\TestResults\xunittestproject\history
+          historydir: ${{ env.ARTIFACT_PATH }}/TestResults/xunittestproject/history
           verbosity: 'Warning'
           title: 'xUnitTests'
           customSettings: 'settings:createSubdirectoryForAllReportTypes=true'
