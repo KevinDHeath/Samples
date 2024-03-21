@@ -8,7 +8,7 @@
     <Product>Sample .NET Projects</Product>
     <DebugType Condition="'$(Configuration)' == 'Release'">Embedded</DebugType> <!-- NuGet Health: Compiler Flags -->
     <RepositoryUrl>https://github.com/kevindheath/samples</RepositoryUrl>
-   </PropertyGroup>
+  </PropertyGroup>
 
   <!-- Local builds -->
   <PropertyGroup>
