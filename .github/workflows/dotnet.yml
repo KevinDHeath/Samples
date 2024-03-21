@@ -84,9 +84,9 @@ jobs:
     steps:
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # In different repository, @=release tag, branch name, commit sha
 
-      # - name: Setup .NET
+      # - name: Setup .NET version
       #   uses: actions/setup-dotnet@v4
       #   with:
       #     dotnet-version: 8.0.x

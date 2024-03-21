@@ -6,7 +6,7 @@ See [Change Log](https://github.com/kevindheath/samples/tree/main/src/ClassLibra
 ## Key Features
 It provides:
 - Models
-- Servicess
+- Services
 
 ## Main Types
 - `Services.MovieReviewService` - Provides data to populate the Movie model.

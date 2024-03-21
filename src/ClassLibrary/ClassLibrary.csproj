@@ -11,11 +11,11 @@
   <!-- Package Information -->
   <PropertyGroup>
     <Version>1.0.0</Version>
-    <PackageReleaseNotes>* Update version</PackageReleaseNotes>
+    <PackageReleaseNotes>* Initial version</PackageReleaseNotes>
     <PackageId>kdheath.Data.Extensions</PackageId>
-    <PackageDescription>The data extensions is a test for an automated NuGet upload.</PackageDescription>
-    <PackageTags>common;interface;reflection;base-class;models;json;serialization;converters;csharp;netstandard;dotnet</PackageTags>
-    <PackageProjectUrl>https://github.com/KevinDHeath/Samples/tree/main/src/ClassLibrary</PackageProjectUrl>
+    <PackageDescription>The Data.Extensions package is a test for automated NuGet uploads.</PackageDescription>
+    <PackageTags>services;models;json;csharp;dotnet</PackageTags>
+    <PackageProjectUrl>https://github.com/kevindheath/samples/blob/main/docs/ClassLibrary/README.md</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 

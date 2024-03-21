@@ -7,7 +7,7 @@
     <Copyright>Copyright © $([System.DateTime]::Now.Year) KevinDHeath</Copyright>
     <Product>Sample .NET Projects</Product>
     <DebugType Condition="'$(Configuration)' == 'Release'">Embedded</DebugType> <!-- NuGet Health: Compiler Flags -->
-    <RepositoryUrl>https://github.com/KevinDHeath/Samples</RepositoryUrl>
+    <RepositoryUrl>https://github.com/kevindheath/samples</RepositoryUrl>
    </PropertyGroup>
 
   <!-- Local builds -->
