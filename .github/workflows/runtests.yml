@@ -36,27 +36,34 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # - name: Setup .NET version
+      #   uses: actions/setup-dotnet@v4
+      #   with:
+      #     dotnet-version: 8.0.x
+
       - name: Create artifacts folder
         if: ${{ inputs.artifact-folder != '' }}
         run: mkdir ${{ env.ARTIFACT_PATH }}
 
-      - name: Restore dependencies
+      - name: .NET Restore
         run: dotnet restore /property:Configuration=Debug
 
       - name: Run all tests
         shell: pwsh
         run: .\tests\RunTests.ps1 ${{ env.ARTIFACT_PATH }}
 
-      - name: xUnitTests coverage report
+      - name: Generate reports
         if: ${{ inputs.artifact-folder != '' }}
+        env:
+          PROJECT_NAME: "xunittestproject"
         uses: danielpalme/ReportGenerator-GitHub-Action@5.2.2
         with:
-          reports: ${{ env.ARTIFACT_PATH }}/TestResults/xunittestproject/*/coverage.cobertura.xml
-          targetdir: ${{ env.ARTIFACT_PATH }}/TestResults/xunittestproject/reports
-          reporttypes: 'Html;Badges;MarkdownSummaryGithub'
-          historydir: ${{ env.ARTIFACT_PATH }}/TestResults/xunittestproject/history
-          verbosity: 'Warning'
           title: 'xUnitTests'
+          reports: ${{ env.ARTIFACT_PATH }}/TestResults/${{ env.PROJECT_NAME }}/*/coverage.cobertura.xml
+          targetdir: ${{ env.ARTIFACT_PATH }}/TestResults/${{ env.PROJECT_NAME }}/reports
+          reporttypes: 'Html;Badges;MarkdownSummaryGithub'
+          historydir: ${{ env.ARTIFACT_PATH }}/TestResults/${{ env.PROJECT_NAME }}/history
+          verbosity: 'Warning'
           customSettings: 'settings:createSubdirectoryForAllReportTypes=true'
           toolpath: 'reportgeneratortool'
 

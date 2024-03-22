@@ -95,7 +95,7 @@ jobs:
         if: env.DOTNET_PACK == 'true'
         run: mkdir ${{ env.ARTIFACT_PATH }}
 
-      - name: Restore dependencies
+      - name: .NET Restore
         run: dotnet restore /property:Configuration=${{ inputs.build-config }}
 
       - name: .NET Build
@@ -115,7 +115,7 @@ jobs:
           path: ${{ env.ARTIFACT_PATH }}
           retention-days: 10
 
-      - name: NuGet push
+      - name: NuGet Push
         if: env.NUGET-PUSH == 'true'
         shell: pwsh
         run: |
