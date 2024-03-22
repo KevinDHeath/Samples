@@ -12,3 +12,4 @@ jobs:
       build-config: 'Release'
       artifact-folder: 'NuGet'
       nuget-push: true
+    secrets: inherit
