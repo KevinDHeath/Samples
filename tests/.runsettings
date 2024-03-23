@@ -1,16 +1,10 @@
+<!-- https://learn.microsoft.com/en-us/visualstudio/test/configure-unit-tests-by-using-a-dot-runsettings-file -->
 <RunSettings>
-  <!-- https://learn.microsoft.com/en-us/visualstudio/test/configure-unit-tests-by-using-a-dot-runsettings-file -->
 
   <!-- Configurations that affect the Test Framework -->
   <RunConfiguration>
-    <ResultsDirectory>.\TestResults</ResultsDirectory>
+    <ResultsDirectory>.\tests\TestResults</ResultsDirectory>
   </RunConfiguration>
-
-  <!--<DataCollectionRunSettings>
-    <DataCollectors>
-      <DataCollector friendlyName="XPlat Code Coverage"/>
-    </DataCollectors>
-   </DataCollectionRunSettings>-->
 
   <!-- Configuration for loggers -->
   <LoggerRunSettings>
@@ -24,7 +18,18 @@
     </Loggers>
   </LoggerRunSettings>
 
-  <!-- Adapter Specific sections -->
+  <!-- https://github.com/coverlet-coverage/coverlet/blob/master/Documentation/VSTestIntegration.md -->
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+
+  <!-- https://xunit.net/docs/runsettings -->
   <xUnit>
     <MethodDisplay>method</MethodDisplay>
     <MethodDisplayOptions>replaceUnderscoreWithSpace,useOperatorMonikers</MethodDisplayOptions>

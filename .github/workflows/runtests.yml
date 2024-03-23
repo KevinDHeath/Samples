@@ -14,21 +14,17 @@ on:
         options: 
         - ubuntu-latest
         - windows-latest
-        default: ubuntu-latest
-      artifact-folder:
-        description: Folder for any artifacts
-        type: string
-        default: UnitTests
+        default: windows-latest
 
 run-name: ${{ inputs.run-name }}
 
 env:
-  ARTIFACT_PATH: ${{ github.workspace }}/${{ inputs.artifact-folder }}
+  ARTIFACT_PATH: ${{ github.workspace }}/upload
 
 jobs:
 
   unit-tests:
-    name: Unit Tests
+    name: UnitTests
     runs-on: ${{ inputs.runs-on }}
 
     steps:
@@ -42,8 +38,8 @@ jobs:
       #     dotnet-version: 8.0.x
 
       - name: Create artifacts folder
-        if: ${{ inputs.artifact-folder != '' }}
-        run: mkdir ${{ env.ARTIFACT_PATH }}
+        shell: pwsh
+        run: mkdir ${{ env.ARTIFACT_PATH }} > $null
 
       - name: .NET Restore
         run: dotnet restore /property:Configuration=Debug
@@ -53,7 +49,6 @@ jobs:
         run: .\tests\RunTests.ps1 ${{ env.ARTIFACT_PATH }}
 
       - name: Generate reports
-        if: ${{ inputs.artifact-folder != '' }}
         env:
           PROJECT_NAME: "xunittestproject"
         uses: danielpalme/ReportGenerator-GitHub-Action@5.2.2
@@ -68,9 +63,8 @@ jobs:
           toolpath: 'reportgeneratortool'
 
       - name: Upload artifacts
-        if: ${{ inputs.artifact-folder != '' }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}-${{ inputs.artifact-folder }}
+          name: ${{ github.event.repository.name }}-UnitTests
           path: ${{ env.ARTIFACT_PATH }}
           retention-days: 5
