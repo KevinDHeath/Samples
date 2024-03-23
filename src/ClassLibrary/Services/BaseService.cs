@@ -27,20 +27,17 @@ public abstract class BaseService
 
 	private static List<T> DeserializeList<T>( ref string? json, JsonSerializerOptions? options = null )
 	{
-		if( json is not null )
+		List<T> rtn = [];
+		json ??= string.Empty;
+		options ??= DefaultSerializerOptions();
+		try
 		{
-			options ??= DefaultSerializerOptions();
-			try
-			{
-				List<T>? obj = JsonSerializer.Deserialize<List<T>>( json, options );
-				if( obj is not null ) { return obj; }
-			}
-			catch( ArgumentException ) { }
-			catch( JsonException ) { }
-			catch( NotSupportedException ) { }
+			List<T>? obj = JsonSerializer.Deserialize<List<T>>( json, options );
+			if( obj is not null ) { rtn = obj; }
 		}
+		catch( Exception ) { }
 
-		return [];
+		return rtn;
 	}
 
 	private static JsonSerializerOptions DefaultSerializerOptions()

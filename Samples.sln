@@ -26,6 +26,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{07E20368-EB81-4069-BDC7-A67F101D4556}"
 	ProjectSection(SolutionItems) = preProject
 		tests\RunTests.ps1 = tests\RunTests.ps1
+		tests\.runsettings = tests\.runsettings
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xUnitTestProject", "tests\xUnitTestProject\xUnitTestProject.csproj", "{908DF14B-92AF-42DC-9B45-632038B93D96}"
