@@ -22,8 +22,8 @@ on:
         description: Build configuration
         type: string
         default: Release
-      artifact-folder:
-        description: Folder for any artifacts
+      artifact-name:
+        description: Name for any artifacts
         type: string
         default: ""
       nuget-push:
@@ -56,8 +56,8 @@ on:
         - Debug
         - Release
         default: Debug
-      artifact-folder:
-        description: Folder for any artifacts
+      artifact-name:
+        description: Name for any artifacts
         type: string
         default: ""
       nuget-push:
@@ -68,9 +68,9 @@ on:
 run-name: ${{ inputs.run-name }}
 
 env:
-  ARTIFACT_PATH: ${{ github.workspace }}/${{ inputs.artifact-folder }}
-  DOTNET_PACK: ${{ inputs.artifact-folder != '' }}
-  NUGET-PUSH: ${{ inputs.artifact-folder != '' && inputs.nuget-push }}
+  ARTIFACT_PATH: ${{ github.workspace }}/upload
+  DOTNET_PACK: ${{ inputs.artifact-name != '' }}
+  NUGET-PUSH: ${{ inputs.artifact-name != '' && inputs.nuget-push }}
 
 jobs:
 
@@ -111,7 +111,7 @@ jobs:
         if: env.DOTNET_PACK == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}-${{ inputs.artifact-folder }}
+          name: ${{ github.event.repository.name }}-${{ inputs.artifact-name }}
           path: ${{ env.ARTIFACT_PATH }}
           retention-days: 10
 

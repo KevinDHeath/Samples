@@ -7,4 +7,4 @@
 [![git-hub-actions-workflow-status](https://img.shields.io/github/actions/workflow/status/kevindheath/samples/publish.yml?style=plastic&label=%F0%9F%93%A6%20Publish%20Packages)](https://github.com/kevindheath/samples/actions/workflows/publish.yml)
 
 The documentation for this repository can be found on the 
-_[Wiki pages.](https://github.com/kevindheath/samples/wiki/Home)_
+_[Wiki.](https://github.com/kevindheath/samples/wiki/Home)_
