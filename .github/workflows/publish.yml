@@ -9,6 +9,6 @@ jobs:
   Publish:
     uses: ./.github/workflows/dotnet.yml # In same repository, uses file from same commit as the calling workflow
     with:
-      artifact-name: 'NuGet'
+      artifact-name: 'Publish'
       nuget-push: true
     secrets: inherit

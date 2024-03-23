@@ -14,7 +14,7 @@ on:
         options: 
         - ubuntu-latest
         - windows-latest
-        default: ubuntu-latest
+        default: windows-latest
 
 run-name: ${{ inputs.run-name }}
 
@@ -24,7 +24,7 @@ env:
 jobs:
 
   unit-tests:
-    name: Unit Tests
+    name: UnitTests
     runs-on: ${{ inputs.runs-on }}
 
     steps:
@@ -38,7 +38,8 @@ jobs:
       #     dotnet-version: 8.0.x
 
       - name: Create artifacts folder
-        run: mkdir ${{ env.ARTIFACT_PATH }}
+        shell: pwsh
+        run: mkdir ${{ env.ARTIFACT_PATH }} > $null
 
       - name: .NET Restore
         run: dotnet restore /property:Configuration=Debug
@@ -64,6 +65,6 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}-TestResults
+          name: ${{ github.event.repository.name }}-UnitTests
           path: ${{ env.ARTIFACT_PATH }}
           retention-days: 5
