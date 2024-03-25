@@ -6,5 +6,4 @@
 [![git-hub-actions-workflow-status](https://img.shields.io/github/actions/workflow/status/kevindheath/samples/runtests.yml?style=plastic&label=%F0%9F%9A%A5%20Run%20Tests)](https://github.com/kevindheath/samples/actions/workflows/runtests.yml)
 [![git-hub-actions-workflow-status](https://img.shields.io/github/actions/workflow/status/kevindheath/samples/publish.yml?style=plastic&label=%F0%9F%93%A6%20Publish%20Packages)](https://github.com/kevindheath/samples/actions/workflows/publish.yml)
 
-The documentation for this repository can be found on the 
-_[Wiki.](https://github.com/kevindheath/samples/wiki/Home)_
+Documentation can be found on the *[Wiki.](https://github.com/kevindheath/samples/wiki/Home)*

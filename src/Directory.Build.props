@@ -6,12 +6,9 @@
     <Authors>Kevin Heath</Authors>
     <Copyright>Copyright © $([System.DateTime]::Now.Year) KevinDHeath</Copyright>
     <Product>Sample .NET Projects</Product>
+    <RepositoryUrl>https://github.com/KevinDHeath/Samples</RepositoryUrl>
     <DebugType Condition="'$(Configuration)' == 'Release'">Embedded</DebugType> <!-- NuGet Health: Compiler Flags -->
-    <RepositoryUrl>https://github.com/kevindheath/samples</RepositoryUrl>
-  </PropertyGroup>
-
-  <!-- Local builds -->
-  <PropertyGroup>
+    <GeneratePackageOnBuild Condition="'$(GITHUB_ACTIONS)' != 'true'">true</GeneratePackageOnBuild>
     <!-- https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/8.0/source-link -->
     <IncludeSourceRevisionInInformationalVersion Condition="'$(Configuration)' != 'Release'">false</IncludeSourceRevisionInInformationalVersion>
     <IsPackable>false</IsPackable>
