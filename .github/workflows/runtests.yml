@@ -42,7 +42,7 @@ jobs:
         run: mkdir ${{ env.ARTIFACT_PATH }} > $null
 
       - name: .NET Restore
-        run: dotnet restore /property:Configuration=Debug
+        run: dotnet restore /property:Configuration=Testing
 
       - name: Run all tests
         shell: pwsh
