@@ -10,6 +10,7 @@
 
   <!-- Package Information -->
   <PropertyGroup>
+    <GeneratePackageOnBuild Condition="'$(GITHUB_ACTIONS)' != 'true'">true</GeneratePackageOnBuild>
     <Version>1.0.0</Version>
     <PackageReleaseNotes>* Initial version</PackageReleaseNotes>
     <PackageId>kdheath.Data.Extensions</PackageId>
