@@ -6,7 +6,17 @@
         xmlns:local="clr-namespace:WPFApplication"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
 
-    </Grid>
+    <TextBlock Grid.Row="0" Text="Main Window" Style="{StaticResource appViewTitleStyle}" Margin="10,0,0,10"/>
+    <StackPanel Grid.Row="1" Margin="0,10" HorizontalAlignment="Stretch">
+      <local:CustomControl1 Padding="3" Width="300" HorizontalAlignment="Left" TextChanged="TextChanged" Margin="10"
+                            IsReadOnly="True" Text="{Binding Path=Name, UpdateSourceTrigger=Explicit}"/>
+    </StackPanel>
+
+  </Grid>
 </Window>
