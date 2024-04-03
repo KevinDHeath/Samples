@@ -55,7 +55,7 @@ on:
         options: 
         - Debug
         - Release
-        default: Release
+        default: Debug
       artifact-name:
         description: Name for any artifacts
         type: string
