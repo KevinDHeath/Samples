@@ -34,7 +34,7 @@ else
     await Task.Delay( 1 );
     if( !string.IsNullOrEmpty( Id ) )
     {
-      MovieItem = MovieReviewService.GetMovie( Int32.Parse( Id ) );
+      MovieItem = await MovieReviewService.GetMovie( Int32.Parse( Id ) );
     }
   }
 }

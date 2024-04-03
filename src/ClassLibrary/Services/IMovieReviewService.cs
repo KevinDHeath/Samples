@@ -4,5 +4,5 @@ public interface IMovieReviewService
 {
 	Task<List<Movie>> GetMovies();
 
-	Movie? GetMovie( int id );
+	Task<Movie?> GetMovie( int id );
 }

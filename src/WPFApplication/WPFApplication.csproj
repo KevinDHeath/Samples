@@ -9,4 +9,8 @@
     <EnableWindowsTargeting Condition="'$(GITHUB_ACTIONS)' == 'true'">true</EnableWindowsTargeting>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="App.xaml"/>
+  </ItemGroup>
+
 </Project>

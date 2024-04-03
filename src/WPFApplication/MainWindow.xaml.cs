@@ -21,4 +21,13 @@ public partial class MainWindow : Window
 		// See https://github.com/dotnet/vscode-csharp/issues/5958
 		InitializeComponent();
 	}
+
+	private void TextChanged( object sender, TextChangedEventArgs e )
+	{
+		if( sender is TextBox tb )
+		{
+			var test = tb.Text;
+			if( test != tb.Text ) { tb.Text = test; }
+		}
+	}
 }

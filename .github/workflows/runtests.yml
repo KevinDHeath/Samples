@@ -42,7 +42,7 @@ jobs:
         run: mkdir ${{ env.ARTIFACT_PATH }} > $null
 
       - name: .NET Restore
-        run: dotnet restore /property:Configuration=Debug
+        run: dotnet restore /property:Configuration=Testing
 
       - name: Run all tests
         shell: pwsh
@@ -51,7 +51,7 @@ jobs:
       - name: Generate reports
         env:
           PROJECT_NAME: "xunittestproject"
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.2.2
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.2.4
         with:
           title: 'xUnitTests'
           reports: ${{ env.ARTIFACT_PATH }}/TestResults/${{ env.PROJECT_NAME }}/*/coverage.cobertura.xml
