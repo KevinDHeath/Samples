@@ -35,6 +35,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{07E20368
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xUnitTestProject", "tests\xUnitTestProject\xUnitTestProject.csproj", "{908DF14B-92AF-42DC-9B45-632038B93D96}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFCustomControlLib", "src\WPFCustomControlLib\WPFCustomControlLib.csproj", "{ECDFBFF1-1802-4BF3-97B0-BD63A306C86F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,12 @@ Global
 		{908DF14B-92AF-42DC-9B45-632038B93D96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{908DF14B-92AF-42DC-9B45-632038B93D96}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
 		{908DF14B-92AF-42DC-9B45-632038B93D96}.Testing|Any CPU.Build.0 = Debug|Any CPU
+		{ECDFBFF1-1802-4BF3-97B0-BD63A306C86F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECDFBFF1-1802-4BF3-97B0-BD63A306C86F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECDFBFF1-1802-4BF3-97B0-BD63A306C86F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECDFBFF1-1802-4BF3-97B0-BD63A306C86F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECDFBFF1-1802-4BF3-97B0-BD63A306C86F}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECDFBFF1-1802-4BF3-97B0-BD63A306C86F}.Testing|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +92,7 @@ Global
 		{54D56259-D89F-48C3-9647-A26E0C2BCC5B} = {E484F99E-BD8F-4F06-8826-6E16D375095E}
 		{F12AA6FF-4AD2-4E01-9A30-2FC1713B1FEC} = {E484F99E-BD8F-4F06-8826-6E16D375095E}
 		{908DF14B-92AF-42DC-9B45-632038B93D96} = {07E20368-EB81-4069-BDC7-A67F101D4556}
+		{ECDFBFF1-1802-4BF3-97B0-BD63A306C86F} = {E484F99E-BD8F-4F06-8826-6E16D375095E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {935E8999-1CAA-4C1E-AD4C-4E2C61CD4401}
