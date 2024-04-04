@@ -38,26 +38,9 @@ public static class SecureStringEx
 
 	#region Alternate Secure String comparisons
 
-	// https://stackoverflow.com/questions/47102639/comparing-two-passwords-in-wpf-mvvm
-	internal static bool ComparePasswords()
-	{
-		var s1 = new NetworkCredential( "", "hello" ).SecurePassword;
-		var s2 = new NetworkCredential( "", @"hello" ).SecurePassword;
-		var s3 = new NetworkCredential( "", @"not-equal" ).SecurePassword;
-		if( s1 is null || s2 is null || s3 is null ) return false;
-
-		var res = SecureStringToString( s1 ) == SecureStringToString( s3 );
-		Console.WriteLine( $"Compare secure string s1 to s3: {res}" );
-
-		res = IsEqual( s1, s1 );
-		Console.WriteLine( $"Compare secure string s1 to s1: {res}" );
-
-		return true;
-	}
-
 	// https://www.sjoerdlangkemper.nl/2017/11/08/comparing-securestrings-in-dotnet/
 	// https://github.com/Sjord/CompareSecureStrings
-	private static string? SecureStringToString( SecureString value )
+	internal static string? SecureStringToString( SecureString value )
 	{
 		IntPtr valuePtr = IntPtr.Zero;
 		try
