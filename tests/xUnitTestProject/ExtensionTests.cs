@@ -47,4 +47,45 @@ public class ExtensionTests
 		// Assert
 		result.Should().BeFalse();
 	}
+
+	[Fact]
+	public void ComparePasswords_should_be_false()
+	{
+		// Arrange
+		SecureString s1 = new NetworkCredential( "", "hello" ).SecurePassword;
+		SecureString s2 = new NetworkCredential( "", "not-equal" ).SecurePassword;
+
+		// Act
+		bool result = SecureStringEx.IsEqual( s1, s2 );
+
+		// Assert
+		result.Should().BeFalse();
+	}
+
+	[Fact]
+	public void ComparePasswords_should_be_true()
+	{
+		// Arrange
+		SecureString s1 = new NetworkCredential( "", "hello" ).SecurePassword;
+		SecureString s2 = new NetworkCredential( "", "hello" ).SecurePassword;
+
+		// Act
+		bool result = SecureStringEx.IsEqual( s1, s2 );
+
+		// Assert
+		result.Should().BeTrue();
+	}
+
+	[Fact]
+	public void SecureStringToString_should_not_be_null()
+	{
+		// Arrange
+		SecureString s1 = new NetworkCredential( "", "hello" ).SecurePassword;
+
+		// Act
+		string? result = SecureStringEx.SecureStringToString( s1 );
+
+		// Assert
+		result.Should().NotBeNull();
+	}
 }

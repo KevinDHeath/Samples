@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnableWindowsTargeting Condition="'$(GITHUB_ACTIONS)' == 'true'">true</EnableWindowsTargeting>
+    <AssemblyTitle>WPF Custom Controls.</AssemblyTitle>
+  </PropertyGroup>
+
+</Project>

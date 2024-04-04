@@ -3,20 +3,40 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WPFApplication"
+        xmlns:cc="clr-namespace:WPFCustomControlLib;assembly=WPFCustomControlLib"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="WPF Application" WindowStartupLocation="CenterScreen" Style="{StaticResource appWindow}" Loaded="Window_Loaded">
   <Grid>
     <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
 
-    <TextBlock Grid.Row="0" Text="Main Window" Style="{StaticResource appViewTitleStyle}" Margin="10,0,0,10"/>
-    <StackPanel Grid.Row="1" Margin="0,10" HorizontalAlignment="Stretch">
-      <local:CustomControl1 Padding="3" Width="300" HorizontalAlignment="Left" TextChanged="TextChanged" Margin="10"
-                            IsReadOnly="True" Text="{Binding Path=Name, UpdateSourceTrigger=Explicit}"/>
-    </StackPanel>
+    <TextBlock Grid.Row="0" Text="Main Window" Style="{StaticResource appViewTitleStyle}" Margin="10,0,0,0"/>
+
+    <DockPanel Grid.Row="1" HorizontalAlignment="Stretch" Margin="0,10">
+      <Button DockPanel.Dock="Right" Width="80" Height="22" Style="{DynamicResource commonButtonStyle}"
+              Content="Exit" Click="CloseButton_Click" VerticalAlignment="Center" Padding="2" Margin="0,-9,10,0"/>
+      <cc:CustomControl1 Width="150" IsReadOnly="True" HorizontalAlignment="Left" Padding="2" Margin="10,0,0,10"/>
+    </DockPanel>
+
+    <ListView Grid.Row="2" x:Name="ForecastList" Style="{StaticResource commonListViewStyle}" Margin="10,0,10,10">
+      <ListView.View>
+        <GridView>
+          <GridViewColumn Width="90" Header="Date" DisplayMemberBinding="{Binding Date}"
+            HeaderContainerStyle="{StaticResource commonGridColumnHeaderStyle}"/>
+          <GridViewColumn Width="90" Header="Temp. (C)" DisplayMemberBinding="{Binding TemperatureC}"
+            HeaderContainerStyle="{StaticResource commonGridColumnHeaderStyle}"/>
+          <GridViewColumn Width="90" Header="Temp. (F)" DisplayMemberBinding="{Binding TemperatureF}"
+            HeaderContainerStyle="{StaticResource commonGridColumnHeaderStyle}"/>
+          <GridViewColumn Width="100" Header="Summary" DisplayMemberBinding="{Binding Summary}"
+            HeaderContainerStyle="{StaticResource commonGridColumnHeaderStyle}"/>
+          <GridViewColumn Width="100" Header="Season" DisplayMemberBinding="{Binding Season}"
+            HeaderContainerStyle="{StaticResource commonGridColumnHeaderStyle}"/>
+        </GridView>
+      </ListView.View>
+    </ListView>
 
   </Grid>
 </Window>

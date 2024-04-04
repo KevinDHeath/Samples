@@ -10,7 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="App.xaml"/>
+    <None Include="App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ClassLibrary\ClassLibrary.csproj" />
+    <ProjectReference Include="..\WPFCustomControlLib\WPFCustomControlLib.csproj" />
   </ItemGroup>
 
 </Project>

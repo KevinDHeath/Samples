@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace WPFApplication;
+namespace WPFCustomControlLib;
 
 public class CustomControl1 : TextBox
 {
@@ -30,6 +30,6 @@ public class CustomControl1 : TextBox
 	private void btnClick_OnClick( object sender, RoutedEventArgs e )
 	{
 		counter++;
-		Text += counter.ToString();
+		Text = counter.ToString();
 	}
 }

@@ -1,13 +1,5 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
+using ClassLibrary.Services;
 
 namespace WPFApplication;
 
@@ -22,12 +14,12 @@ public partial class MainWindow : Window
 		InitializeComponent();
 	}
 
-	private void TextChanged( object sender, TextChangedEventArgs e )
+	private void Window_Loaded( object sender, RoutedEventArgs e )
 	{
-		if( sender is TextBox tb )
-		{
-			var test = tb.Text;
-			if( test != tb.Text ) { tb.Text = test; }
-		}
+		ForecastList.ItemsSource = new WeatherForecastServiceEx().Get();
+	}
+	private void CloseButton_Click(object sender, RoutedEventArgs e)
+	{
+    	Close();
 	}
 }

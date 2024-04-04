@@ -1,0 +1,12 @@
+﻿<ResourceDictionary
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:cc="clr-namespace:WPFCustomControlLib">
+
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceDictionary Source="WPFCustomControlLib;component/Themes/CustomControl1.xaml"/>
+  </ResourceDictionary.MergedDictionaries>
+
+  <Style TargetType="{x:Type cc:CustomControl1}" BasedOn="{StaticResource CustomControl1Style}"/>
+
+</ResourceDictionary>
