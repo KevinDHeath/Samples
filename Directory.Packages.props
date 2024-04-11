@@ -7,10 +7,10 @@
 
   <ItemGroup>
     <!-- ASPNETCoreWebAPI -->
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.6.1" />
 
     <!-- Transitive, referenced by Swashbuckle.AspNetCore -->
-    <PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="8.0.3" />
+    <PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="8.0.5" />
     <PackageVersion Include="Microsoft.OpenApi" Version="1.6.14" />
   </ItemGroup>
 
@@ -19,8 +19,8 @@
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
     <PackageVersion Include="FluentAssertions" Version="6.12.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
-    <PackageVersion Include="xunit" Version="2.7.0" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.7" />
+    <PackageVersion Include="xunit" Version="2.8.0" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.0" />
 
     <!-- Transitive, referenced by Microsoft.TestPlatform.ObjectModel -->
     <PackageVersion Include="NuGet.Frameworks" Version="6.9.1" />
@@ -37,9 +37,9 @@
 
     <!-- Transitive, referenced by xUnit -->
     <PackageVersion Include="xunit.abstractions" Version="2.0.3" />
-    <PackageVersion Include="xunit.analyzers" Version="1.11.0" />
-    <PackageVersion Include="xunit.assert" Version="2.7.0" />
-    <PackageVersion Include="xunit.core" Version="2.7.0" />
+    <PackageVersion Include="xunit.analyzers" Version="1.13.0" />
+    <PackageVersion Include="xunit.assert" Version="2.8.0" />
+    <PackageVersion Include="xunit.core" Version="2.8.0" />
 
     <!-- Transitive, referenced by FluentAssertions -->
     <PackageVersion Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
