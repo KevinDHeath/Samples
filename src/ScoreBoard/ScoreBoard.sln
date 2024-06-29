@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grass.Logic", "Grass.Logic\Grass.Logic.csproj", "{D0C3CB12-BF05-4C6B-8DB4-90EB1D4F72D6}"
+EndProject
+Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "Grass.Rules", "Grass.Rules.shfbproj", "{3F32F5A0-10F2-4976-AD97-A20BDAC00816}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{1FCD4E28-B54F-4EB5-86A2-027FDAA46EB7}"
+	ProjectSection(SolutionItems) = preProject
+		samples\samples.css = samples\samples.css
+		samples\samples.js = samples\samples.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GameOver", "GameOver", "{7609A1F9-DDEC-4DD7-B983-F6C90DC52680}"
+	ProjectSection(SolutionItems) = preProject
+		samples\GameOver\Amy.html = samples\GameOver\Amy.html
+		samples\GameOver\Bob.html = samples\GameOver\Bob.html
+		samples\GameOver\Janis.html = samples\GameOver\Janis.html
+		samples\GameOver\John.html = samples\GameOver\John.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InProgress", "InProgress", "{74FDCE76-321F-49BB-B0EA-818B51636B78}"
+	ProjectSection(SolutionItems) = preProject
+		samples\InProgress\Amy.html = samples\InProgress\Amy.html
+		samples\InProgress\Bob.html = samples\InProgress\Bob.html
+		samples\InProgress\Janis.html = samples\InProgress\Janis.html
+		samples\InProgress\John.html = samples\InProgress\John.html
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grass.Auto", "Grass.Auto\Grass.Auto.csproj", "{DB74A94E-B466-4342-BC81-91572DD3DE6C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D0C3CB12-BF05-4C6B-8DB4-90EB1D4F72D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0C3CB12-BF05-4C6B-8DB4-90EB1D4F72D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0C3CB12-BF05-4C6B-8DB4-90EB1D4F72D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0C3CB12-BF05-4C6B-8DB4-90EB1D4F72D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F32F5A0-10F2-4976-AD97-A20BDAC00816}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F32F5A0-10F2-4976-AD97-A20BDAC00816}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F32F5A0-10F2-4976-AD97-A20BDAC00816}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F32F5A0-10F2-4976-AD97-A20BDAC00816}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB74A94E-B466-4342-BC81-91572DD3DE6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB74A94E-B466-4342-BC81-91572DD3DE6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB74A94E-B466-4342-BC81-91572DD3DE6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB74A94E-B466-4342-BC81-91572DD3DE6C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7609A1F9-DDEC-4DD7-B983-F6C90DC52680} = {1FCD4E28-B54F-4EB5-86A2-027FDAA46EB7}
+		{74FDCE76-321F-49BB-B0EA-818B51636B78} = {1FCD4E28-B54F-4EB5-86A2-027FDAA46EB7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4C66C8D3-D9B5-491F-B730-31B4FF2C8FD8}
+	EndGlobalSection
+EndGlobal

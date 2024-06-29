@@ -3,8 +3,10 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
-_[Nn]otes.txt
+*[Nn]otes.txt
 *.zip
+*.pdf
+src/ScoreBoard/samples/
 
 # User-specific files
 *.rsuser
