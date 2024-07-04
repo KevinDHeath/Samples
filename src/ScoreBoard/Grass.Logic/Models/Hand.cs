@@ -41,17 +41,15 @@ public class Hand
 	/// <summary>Bonus amount at the end of the hand.</summary>
 	public int Bonus { get; internal set; }
 
-	/// <summary>Initializes a new instance of the Hand class.</summary>
-	public Hand()
-	{ }
-
 	/// <inheritdoc/>
 	[System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
-	public override string ToString() => _player;
+	public override string ToString() => Player;
+
+	internal Hand() { }
 
 	internal int Turns { get; set; }
 
-	internal string _player = "Unknown";
+	internal string Player { get; set; } = "Unknown";
 
 	internal int Round { get; set; }
 

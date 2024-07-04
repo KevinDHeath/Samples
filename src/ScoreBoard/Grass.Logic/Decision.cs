@@ -272,7 +272,7 @@ internal class Decision
 #pragma warning restore IDE0074 // Use compound assignment
 
 		bool success = Game.PlayCard( hand, pile, rtn );
-		if( success ) { rtn.AddComment( $" {hand._player} (round {hand.Round})" ); }
+		if( success ) { rtn.AddComment( $" {hand.Player} (round {hand.Round})" ); }
 		return success;
 	}
 

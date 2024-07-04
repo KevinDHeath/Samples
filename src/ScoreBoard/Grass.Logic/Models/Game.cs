@@ -1,4 +1,6 @@
-﻿namespace Grass.Logic.Models;
+﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace Grass.Logic.Models;
 
 /// <summary>Provides the details and actions of a Game.</summary>
 public class Game
@@ -132,7 +134,7 @@ public class Game
 		Players = players;
 		Target = target;
 		Auto = auto;
-		Date = DateTime.Now.ToString( @"MMMM d, yyyy hh:mm" );
+		Date = DateTime.Now.ToString( @"MMMM d, yyyy hh:mm tt" );
 	}
 
 	#region Internal Constructor and Methods
@@ -145,7 +147,9 @@ public class Game
 		if( rtn ) // Pay any required fine and remove heat on
 		{
 			if( fine is not null && hand.StashPile.Remove( fine ) ) { WastedPile.Add( fine ); }
-			Rules.RemoveHeat( hand );
+			card.AddComment( $"played (round {hand.Round})" );
+			fine?.AddComment( $" {hand.Player} paid fine (round {hand.Round})" );
+			rtn = Rules.RemoveHeat( hand );
 		}
 		return rtn;
 	}
@@ -211,7 +215,7 @@ public class Game
 			Hand from = hands[idx];
 			if( idx == hands.Count - 1 ) { idx = 0; } else { idx++; }
 			Hand to = hands[idx];
-			pass.AddComment( $"passed by {from._player} (round {from.Round})" );
+			pass.AddComment( $"passed by {from.Player} (round {from.Round})" );
 			PlayCard( from, to.Cards, pass );
 		}
 

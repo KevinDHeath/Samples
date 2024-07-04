@@ -8,16 +8,16 @@ internal class Program
 
 	static void Main()
 	{
+		Game game = Game.Start( GetPlayers(), auto: true );
 		try
 		{
 			sStopWatch.Start();
-			Game game = Game.Start( GetPlayers(), auto: true );
 			if( !game.Play() ) { Console.WriteLine( "Failed to successfully auto-play game." ); }
 			else
 			{
 				sStopWatch.Stop();
-				HtmlBuilder.CreateHtml( game );
-				//ShowResults( game );
+				ShowResults( game );
+				//HtmlBuilder.CreateHtml( game );
 			}
 		}
 		catch( Exception ex ) { Console.WriteLine( ex.ToString() ); }
@@ -40,6 +40,8 @@ internal class Program
 			new( "John" ),
 		];
 
+	#region Output to Console
+
 	internal static void ShowResults( Game game )
 	{
 		Console.WriteLine( $"Game target: {game.Target:$#,###,##0} on {game.Date}" );
@@ -48,11 +50,12 @@ internal class Program
 		if( banker is not null ) { Console.WriteLine( $"{banker.Name} is the Banker" ); }
 		if( winner is not null )
 		{
-			string str = winner.Current.NetScore >= game.Target ? "game" : "hand";
-			Console.WriteLine( $"{winner.Name} won {str} with {winner.Total:$#,###,##0}" );
+			Console.WriteLine( $"{winner.Name} won with {winner.Total:$#,###,##0}" );
+			Console.WriteLine( $"{winner.Hands.Count} hands played" );
 		}
+
 		string reason = game.StackCount == 0 ? "Stack ran out." : "Market closed.";
-		Console.WriteLine( $"{game.Players[0].GetLastRoundCount()} rounds played - {reason}" );
+		Console.WriteLine( $"{game.Players[0].GetLastRoundsCount()} rounds played in last hand - {reason}" );
 		Console.WriteLine();
 
 		Console.WriteLine( $"Wasted pile count: {game.WastedPile.Count}" );
@@ -61,7 +64,7 @@ internal class Program
 		ConsoleColor dftColor = Console.ForegroundColor;
 		foreach( Player player in game.Players )
 		{
-			Hand? hand = player.GetLastRound();
+			Hand? hand = player.Hands.LastOrDefault();
 			if( hand is null ) { continue; }
 			Console.WriteLine();
 			Console.WriteLine( "------------------------------" );
@@ -74,7 +77,7 @@ internal class Program
 
 			Console.WriteLine( "-- in hand:" );
 			Console.ForegroundColor = ConsoleColor.Yellow;
-			foreach( Card card in player.GetLastRoundCards() ) { Console.WriteLine( $"{card} {card.Caption}" ); }
+			foreach( Card card in player.GetLastHandCards() ) { Console.WriteLine( $"{card} {card.Caption}" ); }
 			Console.ForegroundColor = dftColor;
 
 			Console.WriteLine( "-- stash:" );
@@ -91,8 +94,8 @@ internal class Program
 			Console.WriteLine( $"Paranoia Fines.: {hand.ParanoiaFines:###,##0}" );
 			Console.WriteLine( $"Net Score......: {hand.NetScore:###,##0}" );
 			if( hand.Bonus > 0 ) { Console.WriteLine( $"Win hand Bonus: {hand.Bonus:###,##0}" ); }
-
-			//HtmlBuilder.CreateHtml( game );
 		}
 	}
+
+	#endregion
 }

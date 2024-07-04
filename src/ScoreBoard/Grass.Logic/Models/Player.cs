@@ -12,31 +12,23 @@ public class Player( string name )
 	{
 		get
 		{
-			_currentHand ??= new Hand { _player = Name, Number = Hands.Count + 1 };
+			_currentHand ??= new Hand { Player = Name, Number = Hands.Count + 1 };
 			return _currentHand;
 		}
 	}
+	private Hand? _currentHand;
+
 	internal void ResetCurrent() => _currentHand = null;
 
 	/// <summary>Current score for the game.</summary>
 	public int Total { get; internal set; }
 
-
-	/// <summary>Details of the last round.</summary>
-	/// <returns>If no rounds have been completed <see langword="null"/> is returned.</returns>
+	/// <summary>Cards held at the end of the last hand.</summary>
+	/// <returns>An empty collection is returned if no hands have been completed.</returns>
 	[System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
-	public Hand? GetLastRound()
+	public List<Card> GetLastHandCards()
 	{
-		if( Hands.Count == 0 ) { return null; }
-		return Hands.Last();
-	}
-
-	/// <summary>Cards held at the end of the last rounds.</summary>
-	/// <returns>An empty collection is returned if no rounds have been completed.</returns>
-	[System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
-	public List<Card> GetLastRoundCards()
-	{
-		Hand? hand = GetLastRound();
+		Hand? hand = Hands.LastOrDefault();
 		if( hand is null ) return [];
 		return Hands.Last().Cards;
 	}
@@ -44,9 +36,9 @@ public class Player( string name )
 	/// <summary>Gets the number of rounds in the last hand.</summary>
 	/// <returns>Zero is returned if no rounds have been completed.</returns>
 	[System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
-	public int GetLastRoundCount()
+	public int GetLastRoundsCount()
 	{
-		Hand? hand = GetLastRound();
+		Hand? hand = Hands.LastOrDefault();
 		if( hand is null ) return 0;
 		return hand.Round;
 	}
@@ -57,10 +49,4 @@ public class Player( string name )
 
 	/// <summary>Gets the list of player hands.</summary>
 	public List<Hand> Hands { get; private set; } = [];
-
-	#region Private Variables and Properties
-
-	private Hand? _currentHand;
-
-	#endregion
 }
