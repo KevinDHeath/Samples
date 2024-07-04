@@ -6,7 +6,7 @@ namespace Grass.Auto;
 
 internal class HtmlBuilder()
 {
-	const string cSub = @"samples\AutoPlay\";
+	const string cSub = @"samples\AutoPlay";
 
 	internal static void CreateHtml( Game game )
 	{
@@ -16,7 +16,7 @@ internal class HtmlBuilder()
 		string? output = fi.DirectoryName?.Replace( "Grass.Auto", cSub );
 		if( output is null ) { return; }
 		DirectoryInfo target = new( output );
-		if( !target.Exists ) { target.Create(); }
+		if( !target.Exists ) { target.Create(); } // Set the target folder
 
 		foreach( Player p in game.Players )
 		{
@@ -24,21 +24,20 @@ internal class HtmlBuilder()
 			_ = html.Replace( "{title}", "Auto play" );
 			_ = html.Replace( "{hand-count}", $"{p.Hands.Count}" );
 			_ = html.Replace( "{page-header}", PageHeader( game, p ) );
-			_ = html.Replace( "{menu-label}", MenuLabel( p ) );
+			_ = html.Replace( "{menu-label}",  MenuLabel( p ) );
 			_ = html.Replace( "{hassle-pile}", HasslePile( p ) );
-			_ = html.Replace( "{in-hand}", InHand( p ) );
-			_ = html.Replace( "{stash-pile}", StashPile( p.Current ) );
+			_ = html.Replace( "{in-hand}",     InHand( p ) );
+			_ = html.Replace( "{stash-pile}",  StashPile( p.Current ) );
 			_ = html.Replace( "{score-cards}", ScoreCards( p.Hands ) );
 			_ = html.Replace( "{player-list}", PlayerList( game.Players, p.Name ) );
 
 			string outFile = p.Name + ".html";
 			File.WriteAllText( Path.Combine( target.FullName, outFile ), html.ToString() );
 		}
-		Console.WriteLine( "Output in " + target.FullName );
-
-		CopyForTesting( target );
-		//Program.ShowResults( game );
+		Console.WriteLine( @"Html output in " + target.FullName );
 	}
+
+	#region Section Builders
 
 	private static string PageHeader( Game game, Player p )
 	{
@@ -99,7 +98,7 @@ internal class HtmlBuilder()
 		StringBuilder rtn = new();
 		string indent = new( ' ', 16 );
 		int idx = 0;
-		List<Card> list = player.GetLastRoundCards();
+		List<Card> list = player.GetLastHandCards();
 		foreach( Card card in list )
 		{
 			idx++;
@@ -174,6 +173,8 @@ internal class HtmlBuilder()
 		return rtn.ToString();
 	}
 
+	#endregion
+
 	#region Helper Methods
 
 	private static string GameCard( Card card )
@@ -201,6 +202,8 @@ internal class HtmlBuilder()
 		{
 			foreach( FileInfo file in source.GetFiles() )
 			{ file.CopyTo( Path.Combine( target.FullName, file.Name ), true ); }
+			Console.WriteLine( "Copied to test " + target.FullName );
+
 		}
 		return target.Exists;
 	}

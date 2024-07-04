@@ -82,9 +82,8 @@ internal class Actor
 		Card? heat = CardInfo.GetLast( data.Hand.HasslePile, CardInfo.cHeatOn );
 		if( heat is null ) { return null; }
 		List<Card> list = CardInfo.GetCards( data.Hand.Cards, CardInfo.cHeatOff ).ToList();
-		if( list.Count == 0 ) // No cards in hand
+		if( list.Count == 0 ) // No cards in hand - try and make trade
 		{
-			// Try and make trade
 			string name = heat.Name.Replace( CardInfo.cHeatOn, CardInfo.cHeatOff );
 			Card? trade = Trade( data, others, name );
 			if( trade is null ) { return null; }
@@ -96,11 +95,6 @@ internal class Actor
 		Card? fine = null;
 		if( card.Name == CardInfo.cPayFine ) { fine = Game.GetLowPeddle( data.Hand.StashPile ); }
 		bool ok = sGame.PlayHeatOff( data.Hand, card, fine );
-		if( ok )
-		{
-			card.AddComment( $"played (round {data.Hand.Round})" );
-			fine?.AddComment( $" {data.Player.Name} paid fine (round {data.Hand.Round})" );
-		}
 		return ok ? card : null;
 	}
 

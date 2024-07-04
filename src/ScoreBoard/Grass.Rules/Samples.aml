@@ -16,6 +16,10 @@
           Only shows the specific players cards in hand, and the score cards for any
           previous hands completed in the game. A button is provided to simulate what
           the player would see when they display there own details.</para></listItem>
+        <listItem><para><externalLink><linkText>Long game</linkText>
+          <linkUri>./samples/LongGame/Amy.html</linkUri></externalLink><lineBreak/>
+          This is another completed game, however the target was set to $500,000 which
+          resulted in more hands having to be played.</para></listItem>
       </list>
     </introduction>
   </developerOrientationDocument>
