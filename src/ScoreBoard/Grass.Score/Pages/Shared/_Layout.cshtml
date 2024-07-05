@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title> Grass @ViewData["Title"]</title>
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/shfb/presentationStyle.js"></script>
+	<script src="~/js/site.js"></script>
+</head>
+<body>
+	<header>
+		<nav class="breadcrumb border-bottom pb-1 pl-2" aria-label="breadcrumbs">
+			<ul>
+				<li><a class="navbar-item pt-1" asp-area="" asp-page="/Index">Game</a></li>
+				<li><a class="navbar-item pt-1" href="https://kevindheath.github.io/score/html/2bc71aab-59b3-4100-a0c8-d9e9900dfe32.htm" target="_blank">Rules</a></li>
+			</ul>
+		</nav>
+	</header>
+	<main role="main">
+		@RenderBody()
+	</main>
+	@await RenderSectionAsync( "Scripts", required: false )
+</body>
+</html>

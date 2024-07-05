@@ -1,12 +1,8 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace Grass.Logic.Models;
+﻿namespace Grass.Logic.Models;
 
 /// <summary>Provides the details and actions of a Game.</summary>
 public class Game
 {
-	private List<Card> GrassStack { get; set; } = [];
-
 	/// <summary>Number of cards left in the stack.</summary>
 	public int StackCount => GrassStack.Count;
 
@@ -129,6 +125,8 @@ public class Game
 		return rtn;
 	}
 
+	#region Internal Constructor and Methods
+
 	internal Game( List<Player> players, int target = 0, bool auto = false )
 	{
 		Players = players;
@@ -136,8 +134,6 @@ public class Game
 		Auto = auto;
 		Date = DateTime.Now.ToString( @"MMMM d, yyyy hh:mm tt" );
 	}
-
-	#region Internal Constructor and Methods
 
 	internal bool PlayHeatOff( Hand hand, Card card, Card? fine )
 	{
@@ -254,7 +250,10 @@ public class Game
 
 	#endregion
 
-	#region Private Methods
+	#region Private Properties and Methods
+
+	private List<Card> GrassStack { get; set; } = [];
+
 
 	private static List<Card> Protected( List<Card> list )
 	{

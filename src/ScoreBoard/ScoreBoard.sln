@@ -31,6 +31,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InProgress", "InProgress", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grass.Auto", "Grass.Auto\Grass.Auto.csproj", "{DB74A94E-B466-4342-BC81-91572DD3DE6C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grass.Score", "Grass.Score\Grass.Score.csproj", "{DF699256-A2E1-4C34-A7BA-F452EA77265D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{DB74A94E-B466-4342-BC81-91572DD3DE6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB74A94E-B466-4342-BC81-91572DD3DE6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB74A94E-B466-4342-BC81-91572DD3DE6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF699256-A2E1-4C34-A7BA-F452EA77265D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF699256-A2E1-4C34-A7BA-F452EA77265D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF699256-A2E1-4C34-A7BA-F452EA77265D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF699256-A2E1-4C34-A7BA-F452EA77265D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
