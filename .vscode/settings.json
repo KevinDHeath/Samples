@@ -12,7 +12,6 @@
     "Hsts"
   ],
   "dotnet.defaultSolution": ".\\Samples.sln",
-  "files.autoSave": "onFocusChange",
   "files.exclude": {
     "**/.vs": true,
   },
