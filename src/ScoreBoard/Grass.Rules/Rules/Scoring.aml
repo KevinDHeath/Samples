@@ -12,6 +12,9 @@
         <listItem><para>Total net score for the hand.</para></listItem>
         <listItem><para>$25,000 bonus goes to the player with the highest net score for that hand.</para></listItem>
       </list>
+      <para><ui>Gone broke?</ui> If your end-of-round total is less than zero, you can round it up to 0. If you're
+      in profit in a first round, but negative in the next, your total goes down accordingly. At the start of each
+      round, broke accounts are generously rounded up to 0.</para>
      </introduction>
 
     <relatedTopics>

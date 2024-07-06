@@ -3,6 +3,24 @@
 /// <summary>Provides the details and actions of a Game.</summary>
 public class Game
 {
+	#region Constructor
+
+	private Game( List<Player> players, int target, bool reverse, bool comment, bool auto )
+	{
+		Players = players;
+		Target = target;
+		Comment = comment;
+		Auto = auto;
+		Date = DateTime.Now.ToString( @"MMMM d, yyyy hh:mm tt" );
+		Dealer = SetDealer( null, Hand );
+		PlayOrder = [];
+		ReversePlay = reverse;
+	}
+
+	#endregion
+
+	#region Properties
+
 	/// <summary>Number of cards left in the stack.</summary>
 	public int StackCount => GrassStack.Count;
 
@@ -15,23 +33,47 @@ public class Game
 	/// <summary>Game date.</summary>
 	public string Date { get; private set; }
 
+	/// <summary>Current hand number.</summary>
+	public int Hand { get; private set; }
+
+	/// <summary>Current hand dealer.</summary>
+	public Player Dealer { get; private set; }
+
+	/// <summary>List of players in order of play for the current hand.</summary>
+	public List<Player> PlayOrder { get; private set; }
+
 	/// <summary>Winner of the game.</summary>
-	/// <returns>If the game is not completed <see langword="null"/> is returned.</returns>
+	/// <returns>If the game is not completed <c>null</c> is returned.</returns>
 	public Player? Winner { get; private set; }
 
 	/// <summary>List of cards currently in the wasted pile.</summary>
 	public List<Card> WastedPile { get; private set; } = [];
+	internal bool Comment { get; set; }
+
+	internal bool ReversePlay { get; set; }
+
+	internal Player? ParanoiaPlayer { get; set; } = null;
+
+	internal List<Card> GrassStack { get; set; } = [];
+
+	#endregion
+
+	#region Public Methods
 
 	/// <summary>Initializes a new instance of the Game class.</summary>
 	/// <param name="players">List of players in the game.</param>
 	/// <param name="target">Target for the game. The default is $250,000</param>
-	/// <param name="auto">Indicates whether to use auto-play. The default is <see langword="false"/>.
-	/// <br/><b>Note:</b><i> This should only be set as </i><see langword="true"/><i> for testing purposes
+	/// <param name="reverse">Indicates whether to reverse the play order ever alternate deal.
+	/// The default is <c>false</c>.</param>
+	/// <param name="comment">Indicates whether to add card comments. The default is <c>true</c>.</param>
+	/// <param name="auto">Indicates whether to use auto-play. The default is <c>false</c>.
+	/// <br/><b>Note:</b><i> This should only be set as <c>true</c> for testing purposes
 	/// as it automates the decision process of which card each player will play.</i></param>
 	/// <returns>An initialized game of Grass.</returns>
-	public static Game Start( List<Player> players, int target = 250000, bool auto = false )
+	public static Game Setup( List<Player> players, int target = 250000,
+		bool reverse = false, bool comment = true, bool auto = false )
 	{
-		Game game = new( players, target, auto );
+		Game game = new( players, target, reverse, comment, auto );
 		return game;
 	}
 
@@ -41,233 +83,209 @@ public class Game
 	public bool StartHand()
 	{
 		GrassStack = CardInfo.BuildStack();
-		if( WastedPile.Count > 0 ) { WastedPile.Clear(); } // Reset wasted pile
 		if( GrassStack.Count != Rules.cCardTotal ) { return false; } // Check # of cards
+		if( Players.Count < 2 || Players.Count > Rules.cMaxNumber ) { return false; } // Check # of players
+
+		if( WastedPile.Count > 0 ) { WastedPile.Clear(); } // Reset wasted pile
+
+		Hand++;
+		Dealer = SetDealer( Dealer, Hand );
+
 		return Deal();
 	}
 
 	/// <summary>End a hand of the game.</summary>
-	/// <returns>The player with the highest score at the end of the hand, or
-	/// <see langword="null"/> if one could not be determined.</returns>
-	public Player? EndHand()
+	/// <remarks>Calculates the net scores for each player, assigns the bonus to the player
+	/// with the highest net score, and checks if there is a winner of the game.</remarks>
+	public void EndHand()
 	{
 		// Calculate net scores
 		Player? banker = GetBanker();
 		foreach( Player player in Players )
 		{
 			player.Current.EndHand( banker );
-			player.Hands.Add( player.Current );
+			player.Completed.Add( player.Current );
 		}
+		banker?.Current.EndHand( null ); // Recalculate the banker net score after all skims
 
-		// Recalculate the banker net score after all skims
-		banker?.Current.EndHand( null );
-
-		// Assign bonus for highest score and update players game total
-		int highScore = 0;
-		Player? rtn = null;
+		// Assign the bonus to the player with the highest net score
+		int high = 0;
+		Player? bonus = null;
 		foreach( Player player in Players )
 		{
 			player.Total += player.Current.NetScore;
-			if( player.Current.NetScore > highScore )
+			if( player.Current.NetScore > high )
 			{
-				highScore = player.Current.NetScore;
-				rtn = player;
+				high = player.Current.NetScore;
+				bonus = player;
 			}
 		}
-		if( rtn is not null )
+		if( bonus is not null )
 		{
-			rtn.Current.Bonus = Rules.cBonusAmount;
-			rtn.Total += rtn.Current.Bonus;
+			bonus.Current.Bonus = Rules.cBonusAmount;
+			bonus.Total += bonus.Current.Bonus;
 		}
 
-		return rtn;
-	}
-
-	/// <summary>Take the next card from the stack.</summary>
-	/// <param name="hand">Player hand taking a card.</param>
-	/// <param name="card">Specific card to take.</param>
-	/// <returns><see langword="true"/> if the card is successfully taken
-	/// from the stack and added to the players hand.</returns>
-	public bool TakeCard( Hand hand, Card? card = null )
-	{
-		if( GrassStack.Count == 0 ) { return false; }
-		card ??= GrassStack[0];
-		bool rtn = GrassStack.Remove( card );
-		if( rtn ) { hand.Cards.Add( card ); }
-
-		return rtn;
-	}
-
-	/// <summary>Trade a card from one players hand to another.</summary>
-	/// <param name="yourHand">Your current hand.</param>
-	/// <param name="yourCard">Your card to trade.</param>
-	/// <param name="otherHand">Other players current hand.</param>
-	/// <param name="otherCard">Other players card to trade.</param>
-	/// <returns><see langword="true"/> if the cards are successfully transfered.</returns>
-	public static bool TradeCard( Hand yourHand, Card yourCard, Hand otherHand, Card otherCard )
-	{
-		// TODO: need to undo 1st transfer if 2nd fails
-		// Could check that both cards exist in collections first
-		bool ok = Card.TransferCard( otherHand.Cards, yourHand.Cards, otherCard );
-		if( ok ) { ok = Card.TransferCard( yourHand.Cards, otherHand.Cards, yourCard ); }
-		return ok;
-	}
-
-	/// <summary>Play a card.</summary>
-	/// <param name="hand">Hand to remove the card from.</param>
-	/// <param name="list">List to add the card to.</param>
-	/// <param name="card">Card to remove.</param>
-	/// <returns><see langword="true"/> if the card is successfully played.</returns>
-	public static bool PlayCard( Hand hand, List<Card> list, Card card )
-	{
-		bool rtn = hand.Cards.Remove( card );
-		if( rtn ) { list.Add( card ); }
-		return rtn;
-	}
-
-	#region Internal Constructor and Methods
-
-	internal Game( List<Player> players, int target = 0, bool auto = false )
-	{
-		Players = players;
-		Target = target;
-		Auto = auto;
-		Date = DateTime.Now.ToString( @"MMMM d, yyyy hh:mm tt" );
-	}
-
-	internal bool PlayHeatOff( Hand hand, Card card, Card? fine )
-	{
-		if( !Rules.CanPlayCard( hand, CardInfo.cHeatOff ) ) { return false; }
-
-		bool rtn = PlayCard( hand, hand.HasslePile, card );
-		if( rtn ) // Pay any required fine and remove heat on
+		// Check for game winner with the highest total
+		high = Target;
+		foreach( Player player in Players ) 
 		{
-			if( fine is not null && hand.StashPile.Remove( fine ) ) { WastedPile.Add( fine ); }
-			card.AddComment( $"played (round {hand.Round})" );
-			fine?.AddComment( $" {hand.Player} paid fine (round {hand.Round})" );
-			rtn = Rules.RemoveHeat( hand );
-		}
-		return rtn;
-	}
-
-	internal List<Card?> PlayNirvana( Hand hand, Card card )
-	{
-		List<Card?> rtn = [];
-		List<Card> transfer = hand.MarketIsOpen ? hand.StashPile : hand.HasslePile;
-		if( !PlayCard( hand, transfer, card ) ) { return []; }
-
-		_ = Rules.RemoveHeat( hand ); // Cancel any heat on
-		bool low = Rules.Nirvana( hand, card );
-		List<string> names = [];
-		foreach( Player player in Players ) // Get cards from other players
-		{
-			if( player.Current.Equals( hand ) ) { continue; }
-			Hand other = player.Current;
-			Card? steal = low ? other.LowestUnProtected : other.HighestUnProtected;
-			if( steal is not null )
-			{
-				names.Add( $"{steal.Info.Value:#,###,##0} by {player.Name}" );
-				Card.TransferCard( other.StashPile, hand.StashPile, steal );
-			}
-			else { names.Add( $"nothing by {player.Name}" ); }
-			rtn.Add( steal );
-		}
-		card.AddComment( $"given {string.Join( ", ", names )} (round {hand.Round})" );
-		return rtn;
-	}
-
-	internal bool PlayParanoia( Player player, Card card )
-	{
-		Hand hand = player.Current;
-		List<Card> stash = Rules.Paranoia( hand, card );
-		foreach( Card waste in stash ) // Remove cards from stash pile
-		{
-			waste.AddComment( $" {player.Name} played {card.Info.Caption} (round {hand.Round})" );
-			Card.TransferCard( hand.StashPile, WastedPile, waste );
-		}
-		if( card.Name == CardInfo.cWipedOut ) // Remove cards from hassle pile (including market open)
-		{
-			List<Card> hassle = new( hand.HasslePile );
-			foreach( Card waste in hassle )
-			{
-				waste.AddComment( $" {player.Name} played {card.Info.Caption} (round {hand.Round})" );
-				Card.TransferCard( hand.HasslePile, WastedPile, waste );
-			}
+			if( player.Total > high ) { high = player.Total; Winner = player; }
 		}
 
-		card.AddComment( $" {player.Name} played (round {hand.Round})" );
-		return PlayCard( hand, WastedPile, card );
+		// If no winner reset for the next hand
+		if( Winner is null )
+		{
+			foreach( Player player in Players ) { player.ResetCurrent(); }
+			if( bonus is not null ) { Dealer = bonus; }
+		}
+		return;
 	}
 
-#pragma warning disable CA1822 // Mark members as static
-	internal bool PassCards( Dictionary<Hand, Card?> cards )
-#pragma warning restore CA1822
-	{
-		List<Hand> hands = cards.Keys.ToList();
-		int idx = 0;
-		foreach( Card? pass in cards.Values )
-		{
-			if( pass is null ) { continue; } // Must always have something
-			Hand from = hands[idx];
-			if( idx == hands.Count - 1 ) { idx = 0; } else { idx++; }
-			Hand to = hands[idx];
-			pass.AddComment( $"passed by {from.Player} (round {from.Round})" );
-			PlayCard( from, to.Cards, pass );
-		}
+	private readonly Dictionary<Player, Card> cardsToPass = [];
 
+	/// <summary>Add card to pass due to paranoia being played.</summary>
+	/// <param name="player">Player object.</param>
+	/// <param name="card">Card object.</param>
+	/// <returns><see langword="false"/> if the player has already added a card or
+	/// the card is not in the players hand.</returns>
+	public bool AddCardToPass( Player player, Card card )
+	{
+		if( ParanoiaPlayer is null ) { return false; }
+		if( cardsToPass.ContainsKey( player ) ) { return false; }
+		if( !player.Current.Cards.Contains( card ) ) { return false; }
+
+		cardsToPass.Add( player, card );
+		if( cardsToPass.Count < Players.Count ) { return true; }
+
+		if( cardsToPass.Count == Players.Count )
+		{
+			Rules.PassCards( this, cardsToPass );
+			ParanoiaPlayer = null;
+			cardsToPass.Clear();
+		}
 		return true;
 	}
 
-	internal static Card? GetHighPeddle( List<Card> list, bool protect = false )
-	{
-		List<Card> cards = protect ? Protected( list ) : Unprotected( list );
-		return cards.OrderByDescending( c => c.Info.Value ).FirstOrDefault();
-	}
+	/// <summary>Gets the banker for the current round.</summary>
+	/// <returns>The player holding the banker card, or <see langword="null"/>
+	/// if nobody has the card.</returns>
+	[System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
+	public Player? GetBanker() => GetBanker( Players );
 
-	internal static Card? GetLowPeddle( List<Card> list, bool protect = false )
-	{
-		List<Card> cards = protect ? Protected( list ) : Unprotected( list );
-		return cards.OrderBy( c => c.Info.Value ).FirstOrDefault();
-	}
+	#endregion
 
-	internal Dictionary<Hand, Card?> PassOrder( Player player )
+	#region Action Methods
+
+	/// <summary>Discard a card.</summary>
+	/// <param name="player">Current player.</param>
+	/// <param name="card">Card to discard.</param>
+	/// <returns><see langword="true"/> if the card is successfully discarded.</returns>
+	public bool Discard( Player player, Card card )
 	{
-		Dictionary<Hand, Card?> rtn = [];
-		int idx = Players.IndexOf( player );
-		for( int i = 1; i <= Players.Count; i++ )
+		Hand hand = player.Current;
+		bool ok = hand.Cards.Remove( card );
+		if( ok )
 		{
-			Player p = Players[idx];
-			rtn.Add( p.Current, null );
-			if( Players.Count - 1 == idx ) idx = 0; else idx++;
+			WastedPile.Add( card );
+			if( Comment ) { card.AddComment( $" {player.Name} (round {hand.Round})" ); }
 		}
+		return ok;
+	}
+
+	/// <summary>Play a card in the current hand.</summary>
+	/// <param name="player">Current player.</param>
+	/// <param name="card">Card to play.</param>
+	/// <returns>A <see cref="Grass.Logic.PlayResult" /> object representing the results
+	/// of the play.</returns>
+	/// <remarks>The <c>null</c> return value is used to indicate success. The result should be compared
+	/// to <see cref="Grass.Logic.PlayResult.Success"/> rather than checking for <c>null</c>.</remarks>
+	public PlayResult Play( Player player, Card card ) =>
+		Rules.Play( this, player, card );
+
+	/// <summary>Play a card in the current hand with another player.</summary>
+	/// <param name="player">Current player.</param>
+	/// <param name="card">Card to play.</param>
+	/// <param name="with">Other player.</param>
+	/// <param name="other">Other players card.</param>
+	/// <returns>A <see cref="Grass.Logic.PlayResult" /> object representing the results
+	/// of the play.</returns>
+	/// <remarks>The <c>null</c> return value is used to indicate success. The result should be compared
+	/// to <see cref="Grass.Logic.PlayResult.Success"/> rather than checking for <c>null</c>.</remarks>
+	public PlayResult Play( Player player, Card card, Player with, Card other ) =>
+		Rules.Play( this, player, card, with, other );
+
+	/// <summary>Protect peddle cards.</summary>
+	/// <param name="player">Current player.</param>
+	/// <param name="card">Card to play.</param>
+	/// <param name="peddles">List of peddle cards to protect</param>
+	/// <returns>A <see cref="Grass.Logic.PlayResult" /> object representing the results
+	/// of the play.</returns>
+	/// <remarks>The <c>null</c> return value is used to indicate success. The result should be compared
+	/// to <see cref="Grass.Logic.PlayResult.Success"/> rather than checking for <c>null</c>.</remarks>
+	public PlayResult Protect( Player player, Card card, List<Card> peddles ) =>
+		Rules.Protect( this, player, card, peddles );
+
+	/// <summary>Take the next card from the stack.</summary>
+	/// <param name="hand">Current player hand to add the card to.</param>
+	/// <returns><see langword="true"/> if the card is successfully taken
+	/// from the stack and added to the players hand.</returns>
+	public bool Take( Hand hand )
+	{
+		if( GrassStack.Count == 0 ) { return false; }
+		Card card = GrassStack[^1];
+		bool rtn = GrassStack.Remove( card );
+		if( rtn ) { hand.Cards.Add( card ); }
 		return rtn;
 	}
 
-	internal static List<Card> Unprotected( List<Card> list )
+	internal bool Take( Hand hand, string cardName )
 	{
-		return list.Where( c => c.Name.StartsWith( CardInfo.cPeddle ) && !c.Protected ).ToList();
+		if( GrassStack.Count == 0 ) { return false; }
+		Card? card = GrassStack.Where( c => c.Id == cardName ).FirstOrDefault();
+		if( card == null ) { return false; }
+		bool rtn = GrassStack.Remove( card );
+		if( rtn ) { hand.Cards.Add( card ); }
+		return rtn;
 	}
 
 	#endregion
 
-	#region Private Properties and Methods
+	#region Private Methods
 
-	private List<Card> GrassStack { get; set; } = [];
-
-
-	private static List<Card> Protected( List<Card> list )
+	private Player SetDealer( Player? dealer, int handNumber )
 	{
-		return list.Where( c => c.Name.StartsWith( CardInfo.cPeddle ) && c.Protected ).ToList();
+		if( dealer is null )
+		{
+			// Pick a random player if players populated
+			Random random = new();
+			int idx = random.Next( 0, Players.Count );
+			dealer = Players[idx];
+		}
+		if( handNumber == 0 ) { return dealer; }
+
+		// Order players for hand
+		if( PlayOrder.Count > 0 ) { PlayOrder.Clear(); }
+		List<Player> order = new( Players );
+		bool reverse = handNumber % 2 == 0;
+		if( ReversePlay & reverse ) { order.Reverse(); } // every alternate hand
+
+		int start = order.FindIndex( x => x == dealer ) + 1;
+		for( int i = start; PlayOrder.Count < Players.Count; i++ )
+		{
+			if( i == Players.Count ) { i = 0; }
+			PlayOrder.Add( order[i] );
+		}
+		return dealer;
 	}
 
 	private bool Deal()
 	{
-		if( Players.Count < 2 || Players.Count > Rules.cMaxNumber ) { return false; } // Players
 		for( int i = 0; i < Rules.cMaxNumber; i++ ) // Cards in hand
 		{
 			foreach( Player player in Players )
 			{
-				if( !TakeCard( player.Current ) ) { return false; };
+				if( !Take( player.Current ) ) { return false; };
 			}
 		}
 		return true;
@@ -287,13 +305,7 @@ public class Game
 
 	#region Auto-Play
 
-	private bool Auto { get; set; }
-
-	/// <summary>Gets the banker for the current round.</summary>
-	/// <returns>The player holding the banker card, or <see langword="null"/>
-	/// if nobody has the card.</returns>
-	[System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
-	public Player? GetBanker() => GetBanker( Players );
+	internal bool Auto { get; set; }
 
 	/// <summary>Automatically plays a game.</summary>
 	/// <returns><see langword="true"/> if the play completed successfully.</returns>
@@ -310,24 +322,9 @@ public class Game
 			{
 				if( !StartHand() ) { return false; }
 				PlayHand();
-				Player? bonus = EndHand();
-
-				foreach( Player player in Players ) // Check for winner
-				{
-					if( player.Total > bonus?.Total ) { bonus = player; }
-				}
-				if( bonus is not null && bonus.Total >= Target ) { Winner = bonus; }
-
-				if( Winner is null ) // Reset for next hand
-				{
-					foreach( Player player in Players )
-					{
-						player.ResetCurrent();
-					}
-				}
+				EndHand();
 			}
 		}
-
 		return true;
 	}
 
@@ -337,12 +334,13 @@ public class Game
 		while( GrassStack.Count > 0 )
 		{
 			round++;
-			foreach( Player player in Players )
+			foreach( Player player in PlayOrder )
 			{
 				Hand hand = player.Current;
 				hand.Round = round;
 
-				if( hand.Turns < 0 ) // Miss turns due to playing Paranoia
+				// Miss turns due to playing Paranoia
+				if( hand.Turns < 0 )
 				{
 					player.Current.Turns++;
 					continue;
@@ -350,13 +348,14 @@ public class Game
 
 				while( hand.Turns >= 0 )
 				{
-					if( !Actor.PlayerRound( this, hand ) )
+					if( !Actor.PlayRound( this, hand ) )
 					{
 						if( GrassStack.Count == 0 ) { return true; } // End of grass stack
 						else { return true; } // Market close played
 					}
 
-					if( player.Current.Turns > 0 ) // Extra turns due to playing Nirvana
+					// Extra turns due to playing Nirvana
+					if( player.Current.Turns > 0 )
 					{
 						player.Current.Turns--;
 						continue;
@@ -365,7 +364,6 @@ public class Game
 				}
 			}
 		}
-
 		return false;
 	}
 

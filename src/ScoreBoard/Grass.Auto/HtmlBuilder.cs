@@ -22,13 +22,13 @@ internal class HtmlBuilder()
 		{
 			StringBuilder html = new( File.ReadAllText( fi.FullName ) );
 			_ = html.Replace( "{title}", "Auto play" );
-			_ = html.Replace( "{hand-count}", $"{p.Hands.Count}" );
+			_ = html.Replace( "{hand-count}", $"{p.Completed.Count}" );
 			_ = html.Replace( "{page-header}", PageHeader( game, p ) );
 			_ = html.Replace( "{menu-label}",  MenuLabel( p ) );
 			_ = html.Replace( "{hassle-pile}", HasslePile( p ) );
 			_ = html.Replace( "{in-hand}",     InHand( p ) );
 			_ = html.Replace( "{stash-pile}",  StashPile( p.Current ) );
-			_ = html.Replace( "{score-cards}", ScoreCards( p.Hands ) );
+			_ = html.Replace( "{score-cards}", ScoreCards( p.Completed ) );
 			_ = html.Replace( "{player-list}", PlayerList( game.Players, p.Name ) );
 
 			string outFile = p.Name + ".html";
@@ -42,7 +42,7 @@ internal class HtmlBuilder()
 	private static string PageHeader( Game game, Player p )
 	{
 		StringBuilder rtn = new();
-		string indent = new( ' ', 8 );
+		string indent = new( ' ', 4 );
 		string msg;
 		if( game.Winner is not null ) { msg = p == game.Winner ? "Winner!" : $"{game.Winner.Name} won"; }
 		else { msg = @"Hand #{p.Hands.Count}"; }
@@ -60,7 +60,7 @@ internal class HtmlBuilder()
 
 	private static string HasslePile( Player player )
 	{
-		string indent = new( ' ', 14 );
+		string indent = new( ' ', 10 );
 		Hand hand = player.Current;
 		Card? status = hand.HasslePile.LastOrDefault();
 		StringBuilder rtn = new();
@@ -70,7 +70,7 @@ internal class HtmlBuilder()
 		else { _ = rtn.AppendLine( indent + GameCard( status ) ); }
 
 		_ = rtn.Append( indent + $"<td><p style=\"margin-bottom: 0px;\">Game total: {Format( player.Total, true )}<br/>" );
-		_ = rtn.Append( $"Stash total:  {( hand.Protected + hand.UnProtected ):$###,##0}</p>" );
+		_ = rtn.Append( $"Stash total: {( hand.Protected + hand.UnProtected ):$###,##0}</p>" );
 		if( hand.HasslePile.Count < 2 ) { _ = rtn.Append( "</td>" ); }
 		else // include hassle history
 		{
@@ -82,8 +82,8 @@ internal class HtmlBuilder()
 			string li = indent + "      <li class=\"hassle-history\">";
 			foreach( Card card in reverse )
 			{
-				if( card.Name.StartsWith( "Market" ) ) { continue; }
-				_ = rtn.AppendLine( li + $"{card.Info.Caption} {card.Caption}</li>" );
+				if( card.Id.StartsWith( "Market" ) ) { continue; }
+				_ = rtn.AppendLine( li + $"{card.Info.Caption} {card.Comment}</li>" );
 			}
 			_ = rtn.AppendLine( indent + "    </ul></td></tr>" );
 			_ = rtn.Append( indent + "  </table></div>" );
@@ -96,9 +96,9 @@ internal class HtmlBuilder()
 	private static string InHand( Player player )
 	{
 		StringBuilder rtn = new();
-		string indent = new( ' ', 16 );
+		string indent = new( ' ', 12 );
 		int idx = 0;
-		List<Card> list = player.GetLastHandCards();
+		IReadOnlyCollection<Card> list = player.Current.InHand;
 		foreach( Card card in list )
 		{
 			idx++;
@@ -112,7 +112,7 @@ internal class HtmlBuilder()
 	private static string StashPile( Hand hand )
 	{
 		StringBuilder rtn = new();
-		string indent = new( ' ', 12 );
+		string indent = new( ' ', 8 );
 		int idx = 0;
 		List<Card> list = hand.StashView;
 
@@ -132,17 +132,17 @@ internal class HtmlBuilder()
 	{
 		if( hands.Count == 0 ) { return string.Empty; }
 		StringBuilder rtn = new();
-		string indent = new( ' ', 12 );
-		string row = indent + @"    <tr><td";
+		string indent = new( ' ', 8 );
+		string row = indent + @"      <tr><td";
 
-		List<Hand> list = hands.OrderByDescending( h => h.Number ).ToList();
+		List<Hand> list = hands.OrderByDescending( h => h.Count ).ToList();
 		_ = rtn.AppendLine( indent + "<div class=\"columns is-multiline\">" );
 		foreach( Hand hand in list )
 		{
 			int total = hand.NetScore + hand.Bonus;
-			_ = rtn.AppendLine( indent + "<div class=\"column\">" );
-			_ = rtn.AppendLine( indent + "  " + "<table class=\"score-card\">" );
-			_ = rtn.AppendLine( indent + @$"    <tr><th colspan='2'>{hand.Number.DisplayWithSuffix()} Hand</th></tr>" );
+			_ = rtn.AppendLine( indent + "  <div class=\"column\">" );
+			_ = rtn.AppendLine( indent + "    " + "<table class=\"score-card\">" );
+			_ = rtn.AppendLine( indent + @$"      <tr><th colspan='2'>{hand.Count.DisplayWithSuffix()} Hand</th></tr>" );
 			_ = rtn.AppendLine( row + $">Protected profit</td><td class=\"align-right\">{Format( hand.Protected )}</td></tr>" );
 			_ = rtn.AppendLine( row + $">+ At risk profit</td><td class=\"align-right\">{Format( hand.UnProtected )}</td></tr>" );
 			_ = rtn.AppendLine( row + $">- Banker's skim /+ bonus</td><td class=\"align-right\">{Format( hand.Skimmed )}</td></tr>" );
@@ -151,8 +151,8 @@ internal class HtmlBuilder()
 			_ = rtn.AppendLine( row + $">= Net profit</td><td class=\"align-right\">{Format( hand.NetScore )}</td></tr>" );
 			_ = rtn.AppendLine( row + @$" nowrap>+ Bonus for winner of hand</td><td class='align-right'>{Format( hand.Bonus )}</td></tr>" );
 			_ = rtn.AppendLine( row + $">Total</td><td class=\"align-right\">{Format( total )}</td></tr>" );
-			_ = rtn.AppendLine( indent + "  " + "</table>" );
-			_ = rtn.AppendLine( indent + "</div>" );
+			_ = rtn.AppendLine( indent + "    " + "</table>" );
+			_ = rtn.AppendLine( indent + "  </div>" );
 		}
 		_ = rtn.Append( indent + "</div>" );
 		return rtn.ToString();
@@ -161,7 +161,7 @@ internal class HtmlBuilder()
 	private static string PlayerList( List<Player> players, string current )
 	{
 		StringBuilder rtn = new();
-		string indent = new( ' ', 14 );
+		string indent = new( ' ', 10 );
 		int idx = 0;
 		foreach( Player p in players )
 		{
@@ -179,9 +179,9 @@ internal class HtmlBuilder()
 
 	private static string GameCard( Card card )
 	{
-		string caption = card.Caption;
-		string title = caption.Length > 0 ? $"title=\"{card.Caption}\" " : string.Empty;
-		return $"<td class=\"game-card\"><img class=\"image\" {title}src=\"..\\..\\..\\media\\{card.Name}.png\"></td>";
+		string caption = card.Comment;
+		string title = caption.Length > 0 ? $"title=\"{card.Comment}\" " : string.Empty;
+		return $"<td class=\"game-card\"><img class=\"image\" {title}src=\"{CardInfo.cUrl}{card.Id}.png\"></td>";
 	}
 
 	private static string Format( int amt, bool dollar = false )

@@ -31,7 +31,8 @@
       <DocumentationSource sourceFile=".\Grass.Logic\bin\Debug\net8.0\Grass.Logic.xml" />
     </DocumentationSources>
     <NamespaceSummaries>
-      <NamespaceSummaryItem name="Grass.Logic.Models" isDocumented="True">Data models for the Grass game.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="Grass.Logic" isDocumented="True">Provides classes that are used by the Grass game.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="Grass.Logic.Models" isDocumented="True">Provides data model classes used by the Grass game.</NamespaceSummaryItem>
     </NamespaceSummaries>
     <NamingMethod>MemberName</NamingMethod>
     <RootNamespaceContainer>False</RootNamespaceContainer>

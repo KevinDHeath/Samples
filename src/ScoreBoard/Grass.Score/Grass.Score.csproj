@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Grass.Logic\Grass.Logic.csproj" />
+  </ItemGroup>
+
 </Project>

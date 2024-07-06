@@ -2,38 +2,33 @@
 using Grass.Logic.Models;
 namespace Grass.Logic;
 
+[System.Diagnostics.DebuggerDisplay( "{Player.Name}" )]
 internal class Decision
 {
 	private static int TotalHighUnprotected = 0;
 	private static int TotalLowUnprotected = 0;
-	internal static Decision? FeelgoodInPlay = null;
+	internal static Player? FeelgoodInPlay = null;
 
 	#region Properties and Constructor
 
 	internal Player Player { get; private set; }
 	internal Hand Hand { get; private set; }
 	internal int TotalTabled => Hand.Protected + Hand.UnProtected;
-	internal bool NeverOpen { get; private set; }
-	internal bool IsHeatOn { get; private set; }
-
+	internal bool NotOpen => Hand.HasslePile.Count == 0;
+	internal bool DrFeelgood => CardInfo.GetCards( Hand.StashPile, CardInfo.cDrFeelgood ).Any();
 	private Card? LowUnprotected => Hand.LowestUnProtected;
 	private int LowValue => LowUnprotected is not null ? LowUnprotected.Info.Value : 0;
 	private Card? HighUnprotected => Hand.HighestUnProtected;
 	private int HighValue => HighUnprotected is not null ? HighUnprotected.Info.Value : 0;
-	private bool DrFeelgood { get; set; }
 
 	internal Decision( Player player )
 	{
 		Player = player;
 		Hand = player.Current;
-		NeverOpen = !CardInfo.GetCards( Hand.HasslePile, CardInfo.cOpen ).Any();
-		IsHeatOn = !NeverOpen && Hand.HasslePile.Count > 1;
-		Card? card = Hand.StashPile.FirstOrDefault( c => c.Name == CardInfo.cDrFeelgood );
-		if( card is not null ) { DrFeelgood = true; }
+		//Card? card = Hand.StashPile.FirstOrDefault( c => c.Name == CardInfo.cDrFeelgood );
+		//if( card is not null ) { DrFeelgood = true; }
+		//bool test = CardInfo.GetCards( Hand.StashPile, CardInfo.cDrFeelgood ).Any();
 	}
-
-	/// <inheritdoc/>
-	public override string ToString() => Player.Name;
 
 	#endregion
 
@@ -46,14 +41,14 @@ internal class Decision
 		{
 			TotalLowUnprotected += d.LowValue;
 			TotalHighUnprotected += d.HighValue;
-			if( d.DrFeelgood && FeelgoodInPlay == null ) { FeelgoodInPlay = d; }
+			if( d.DrFeelgood && FeelgoodInPlay == null ) { FeelgoodInPlay = d.Player; }
 		}
 	}
 
 	internal static Decision? Trade( Decision data, List<Decision> others, string required )
 	{
 		// Must have money in hand
-		Card? low = Game.GetLowPeddle( data.Hand.Cards );
+		Card? low = Card.GetLowPeddle( data.Hand.Cards );
 		if( low is null ) { return null; } // No money to trade
 		Decision? other = null;
 
@@ -66,7 +61,7 @@ internal class Decision
 			{
 				case CardInfo.cOpen:
 					// Must be open and have 1 in hand or not be open and have more than 1 in hand
-					int num = trade.NeverOpen ? 1 : 0;
+					int num = trade.NotOpen ? 1 : 0;
 					if( res.Count > num ) { other = trade; }
 					break;
 				default:
@@ -95,7 +90,7 @@ internal class Decision
 		if( list.Count == 0 ) { return null; } // No cards in hand
 
 		// Match heat off card with heat on
-		Card? rtn = heatOn.Name switch
+		Card? rtn = heatOn.Id switch
 		{
 			CardInfo.cOnBust => CardInfo.GetFirst( list, CardInfo.cOffBust ),
 			CardInfo.cOnDetained => CardInfo.GetFirst( list, CardInfo.cOffDetained ),
@@ -107,7 +102,7 @@ internal class Decision
 
 		// cPayFine - Must have small unprotected card in stash
 		//            worth using if large unprotected and high value peddle in hand
-		if( rtn.Name == CardInfo.cPayFine )
+		if( rtn.Id == CardInfo.cPayFine )
 		{
 			Card? fine = data.LowUnprotected;
 			if( fine is null || fine.Info.Value > 25000 ) { return null; }
@@ -116,27 +111,31 @@ internal class Decision
 		return rtn;
 	}
 
-	internal static Card? Protect( Decision data, List<Card> list )
+	internal static Card? Protect( Decision data, List<Card> peddles )
 	{
+		List<Card> cards = CardInfo.GetCards( data.Hand.Cards, CardInfo.cProtection ).ToList();
+		if( cards.Count == 0 ) { return null; }
+
 		// Must have unprotected card in stash with same value
 		// cCatchabuzz      single $25,000 or multiple lower values
 		// cGrabasnack      single $25,000 or multiple lower values
 		// cLustconquersall single $50,000 or multiple lower values
-		List<Card> stash = Game.Unprotected( data.Hand.StashPile );
+
+		Card? rtn = null;
+		List<Card> stash = Card.GetUnprotected( data.Hand.StashPile );
 		if( stash.Count == 0 ) { return null; }
 
 		// Match unprotected stash card using highest protection value first
-		Card? rtn = null;
-		foreach( Card protect in list.OrderByDescending( x => x.Info.Value ).ToList() )
+		foreach( Card protect in cards.OrderByDescending( x => x.Info.Value ).ToList() )
 		{
 			foreach( Card peddle in stash )
 			{
 				if( peddle.Info.Value != protect.Info.Value ) { continue; }
-				peddle.Protected = true;
-				protect.AddComment( $"played (round {data.Hand.Round})" ); // TODO: This s/b in Game
+				peddles.Add( peddle );
 				rtn = protect;
 				break;
 			}
+			if( rtn is not null ) { break; }
 		}
 		return rtn;
 	}
@@ -145,31 +144,31 @@ internal class Decision
 	{
 		// Don't play Dr. Feelgood if no other unprotected cards in stack
 		Card? rtn = data.Hand.UnProtected == 0
-			? Game.GetLowPeddle( data.Hand.Cards )
-			: Game.GetHighPeddle( data.Hand.Cards );
+			? Card.GetLowPeddle( data.Hand.Cards )
+			: Card.GetHighPeddle( data.Hand.Cards );
 
 		return rtn;
 	}
 
-	internal static Dictionary<Hand, Card?> Steal( Decision data )
+	internal static Dictionary<Player, Card?> Steal( List<Decision> others )
 	{
-		Dictionary<Hand, Card?> rtn = [];
+		Dictionary<Player, Card?> rtn = [];
 
 		// Don't steal Dr. Feelgood if no other unprotected cards in stack
 
 		// Currently only works for Dr. Feelgood 
 		if( FeelgoodInPlay is null ) { return rtn; }
-		Decision other = FeelgoodInPlay;
-		Card? steal = CardInfo.GetFirst( other.Hand.StashPile, CardInfo.cDrFeelgood );
+		Player other = FeelgoodInPlay;
+		Card? steal = CardInfo.GetFirst( other.Current.StashPile, CardInfo.cDrFeelgood );
 
 		// My official rules state other CAN have heat on
-		if( other.IsHeatOn ) { return rtn; }
-		rtn.Add( other.Hand, steal );
+		if( other.Current.MarketIsOpen ) { return rtn; }
+		rtn.Add( other, steal );
 
 		return rtn;
 	}
 
-	internal static Card? Nirvana( Decision data, List<Card> list )
+	internal static Card? Nirvana( List<Card> list )
 	{
 		// cStonehigh should play if any player just has cDrFeelgood as only unprotected stash?
 		//            should play if others have large amount of unprotected
@@ -180,14 +179,14 @@ internal class Decision
 		Card? rtn = null;
 		foreach( Card pick in list ) // Pick a card from the list
 		{
-			if( pick.Name == CardInfo.cEuphoria && TotalHighUnprotected > 105000 ) { rtn = pick; }
+			if( pick.Id == CardInfo.cEuphoria && TotalHighUnprotected > 105000 ) { rtn = pick; }
 			else if( TotalLowUnprotected > 50000 ) { rtn = pick; }
 			if( rtn is not null ) { break; }
 		}
 		return rtn;
 	}
 
-	internal static Decision? HeatOn( Decision data, List<Decision> others )
+	internal static Decision? HeatOn( List<Decision> others )
 	{
 		// Find a player without heat on and a score greater than 55,000 
 		int val = 55000;
@@ -218,35 +217,29 @@ internal class Decision
 		Card? rtn = null;
 		Card? pass = null;
 		// Process in order of severity, cSoldout, cDoublecross, cWipedOut
-		// TODO: Should this be the other way round?
 		foreach( Card card in list.OrderByDescending( x => x.Info.Value ).ToList() )
 		{
 			pass = GetWorstCard( data.Hand.Cards, card );
-			bool wipeOut = ( pass is not null ) && ( pass.Name == CardInfo.cWipedOut );
+			bool worse = ( pass is not null ) && ( pass.Id.StartsWith( CardInfo.cParanoia ) ) &&
+				( pass.Info.Value < card.Info.Value );
 
-			switch( card.Name )
+			switch( card.Id ) // What if pass value is worse
 			{
 				case CardInfo.cSoldout:
-					if( data.LowValue <= 25000 || wipeOut )
+					if( data.LowValue <= 25000 || worse )
 					{
 						// verified with lowest 5,000 and with 2 protected and no other
-						if( data.LowUnprotected is not null )
-						{
-							rtn = card;
-						}
+						if( data.LowUnprotected is not null ) { rtn = card; }
 					}
 					break;
 				case CardInfo.cDoublecross:
-					if( data.HighValue <= 50000 || wipeOut )
+					if( data.HighValue <= 50000 || worse ) 
 					{
-						if( data.HighUnprotected is not null )
-						{
-							rtn = card;
-						}
+						if( data.HighUnprotected is not null ) { rtn = card; }
 					}
 					break;
 				case CardInfo.cWipedOut:
-					if( data.NeverOpen || data.TotalTabled == 0 )
+					if( data.NotOpen || data.TotalTabled == 0 )
 					{
 						rtn = card; // Manually set to debug removal of hassle pile
 					}
@@ -260,20 +253,19 @@ internal class Decision
 
 	#region Card to discard
 
-	internal static bool Discard( Hand hand, Game game )
+	internal static bool Discard( Player player, Game game )
 	{
-		List<Card> pile = game.WastedPile;
+		Hand hand = player.Current;
 		Card? rtn = GetDiscard( hand.Cards );
 
 #pragma warning disable IDE0074 // Use compound assignment
 #pragma warning disable IDE0270 // Null check can be simplified
-		if( rtn is null ) { rtn = hand.Cards[0]; } // Cannot be null
+		if( rtn is null ) { rtn = hand.Cards[0]; } // Must not be null
 #pragma warning restore IDE0270 // Null check can be simplified
 #pragma warning restore IDE0074 // Use compound assignment
 
-		bool success = Game.PlayCard( hand, pile, rtn );
-		if( success ) { rtn.AddComment( $" {hand.Player} (round {hand.Round})" ); }
-		return success;
+		bool ok = game.Discard( player, rtn );
+		return ok;
 	}
 
 	private static Card? GetDiscard( List<Card> cards )

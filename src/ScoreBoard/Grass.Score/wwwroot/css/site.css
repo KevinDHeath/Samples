@@ -4,6 +4,7 @@
 
 body { font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; }
 
+.fixedheader { padding-bottom: 5px; }
 .card-header { background-color: #0066cc; }
 .table { border: none !important; }
 

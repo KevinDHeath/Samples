@@ -3,33 +3,47 @@
 /// <summary>Playing card type information.</summary>
 public class CardInfo
 {
+	#region Properties
+
 	/// <summary>Location of the on-line card images.</summary>
-	public const string cUrl = "https://kevindheath.github.io/grassscore/media/";
+	[System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
+	public const string cUrl = "https://KevinDHeath.github.io/score/media/";
 
 	/// <summary>User friendly card name.</summary>
 	public string Caption { get; private set; }
 
-	/// <summary>Number of playing cards of this type.</summary>
+	/// <summary>The number of playing cards of this type.</summary>
 	public int Count { get; private set; }
 
 	/// <summary>Card image height.</summary>
 	/// <remarks>This is 50% of the actual image size.</remarks>
+	[System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
 	public int Height { get { return Display( _height ); } private set { _height = value; } }
 	private int _height;
 
-	/// <summary>Card type value.</summary>
+	/// <summary>Card type value in the game.</summary>
+	/// <remarks>The value depends on the type of card. Peddle cards have positive values ranging
+	/// from $5,000 to $100,000. Paranoia cards have a negative value that give penalties to players.
+	/// Both of these types are used to determine the scores.<br/>
+	/// Protection cards allow a player to protect their peddle cards against skim cards and
+	/// range from $5,000 to $50,000.</remarks>
 	public int Value { get; private set; }
 
 	/// <summary>Card image width.</summary>
 	/// <remarks>This is 50% of the actual image size.</remarks>
+	[System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
 	public int Width { get { return Display( _width ); } private set { _width = value; } }
 	private int _width;
 
-	internal string Name { get; private set; }
+	internal string Id { get; private set; }
 
-	/// <inheritdoc/>
-	[System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
-	public override string ToString() => Name;
+	#endregion
+
+	#region Constructor
+
+	private CardInfo( string id ) { Id = id; Caption = string.Empty; }
+
+	#endregion
 
 	#region Internal Constants
 
@@ -91,24 +105,22 @@ public class CardInfo
 	internal static Card? GetFirst( List<Card> list, string name )
 	{
 		if( list is null || name is null || name.Length == 0 ) { return null; }
-		return list.FirstOrDefault( c => c.Name.StartsWith( name ) );
+		return list.FirstOrDefault( c => c.Id.StartsWith( name ) );
 	}
 
 	internal static Card? GetLast( List<Card> list, string name )
 	{
-		return list.LastOrDefault( c => c.Name.StartsWith( name ) );
+		return list.LastOrDefault( c => c.Id.StartsWith( name ) );
 	}
 
 	internal static IEnumerable<Card> GetCards( List<Card> list, string name )
 	{
-		return list.Where( c => c.Name.StartsWith( name ) );
+		return list.Where( c => c.Id.StartsWith( name ) );
 	}
 
 	#endregion
 
-	#region Private Constructor and Methods
-
-	private CardInfo( string name ) { Name = name; Caption = string.Empty; }
+	#region Private Methods
 
 	// Roundup to 50% of actual
 	private static int Display( int val ) => (int)Math.Ceiling( (double)val * 50 / 100 );

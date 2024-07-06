@@ -1,13 +1,20 @@
 ﻿namespace Grass.Logic.Models;
 
 /// <summary>Provides the details of a players hand.</summary>
+[System.Diagnostics.DebuggerDisplay( "{Player}" )]
 public class Hand
 {
+	#region Properties
+
 	/// <summary>Hand number within a game.</summary>
-	public int Number { get; internal set; }
+	public int Count { get; internal set; }
 
 	/// <summary>Determines whether the market is open.</summary>
 	public bool MarketIsOpen => Rules.IsMarketOpen( HasslePile );
+
+	/// <summary>Read-only List of all cards currently in hand.</summary>
+	[System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
+	public IReadOnlyCollection<Card> InHand => Cards.AsReadOnly();
 
 	/// <summary>List of all cards currently in the hassle pile.</summary>
 	public List<Card> HasslePile { get; private set; } = [];
@@ -27,6 +34,10 @@ public class Hand
 	/// <summary>Total of protected cards in the stash at the end of the hand.</summary>
 	public int Protected { get { return TotalStash( StashPile, true ); } }
 
+	/// <summary>The current round number.</summary>
+	[System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
+	public int Round { get; internal set; }
+
 	/// <summary>Amount skimmed by the Banker at the end of the hand.</summary>
 	public int Skimmed { get; internal set; }
 
@@ -41,23 +52,21 @@ public class Hand
 	/// <summary>Bonus amount at the end of the hand.</summary>
 	public int Bonus { get; internal set; }
 
-	/// <inheritdoc/>
-	[System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
-	public override string ToString() => Player;
-
 	internal Hand() { }
 
 	internal int Turns { get; set; }
 
 	internal string Player { get; set; } = "Unknown";
 
-	internal int Round { get; set; }
+	internal Card? HighestUnProtected { get { return Card.GetHighPeddle( StashPile ); } }
 
-	internal Card? HighestUnProtected { get { return Game.GetHighPeddle( StashPile ); } }
-
-	internal Card? LowestUnProtected { get { return Game.GetLowPeddle( StashPile ); } }
+	internal Card? LowestUnProtected { get { return Card.GetLowPeddle( StashPile ); } }
 
 	internal List<Card> Cards { get; private set; } = [];
+
+	#endregion
+
+	#region Methods
 
 	internal void EndHand( Player? banker )
 	{
@@ -71,7 +80,9 @@ public class Hand
 			Skimmed -= skim;
 			banker.Current.Skimmed += skim;
 		}
-		NetScore = Protected + UnProtected + ParanoiaFines + Skimmed - HighestPeddle;
+		int total = Protected + UnProtected + ParanoiaFines + Skimmed - HighestPeddle;
+		//NetScore = total > 0 ? total : 0; TODO: See Gone broke?
+		NetScore = total;
 	}
 
 	internal int CurrentNet()
@@ -83,11 +94,9 @@ public class Hand
 		return rtn;
 	}
 
-	#region Private Methods
-
 	private static int GetHighValue( List<Card> cards )
 	{
-		Card? card = Game.GetHighPeddle( cards );
+		Card? card = Card.GetHighPeddle( cards );
 		return card is not null ? card.Info.Value : 0;
 	}
 
@@ -101,9 +110,9 @@ public class Hand
 
 	private List<Card> GetStashView()
 	{
-		return StashPile.Where( c => c.Name.StartsWith( CardInfo.cProtection )
-		   || ( c.Name.StartsWith( CardInfo.cPeddle ) && !c.Protected ) )
-		 .OrderByDescending( c => c.Info.Value ).ThenBy( c => c.Info.Name ).ToList();
+		return StashPile.Where( c => c.Id.StartsWith( CardInfo.cProtection )
+		   || ( c.Id.StartsWith( CardInfo.cPeddle ) && !c.Protected ) )
+		 .OrderByDescending( c => c.Info.Value ).ThenBy( c => c.Info.Id ).ToList();
 	}
 
 	#endregion

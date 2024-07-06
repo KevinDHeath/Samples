@@ -115,18 +115,18 @@
           <mediaLinkInline><image xlink:href="Paranoia-UtterlyWipedOut"/></mediaLinkInline>
         </para>
          <list class="bullet">
-          <listItem><para>If any of these cards are played on a peddle pile, Sold out forces the
-          player to skip a turn and lose their lowest peddle; Doublecrossed forces the player to
-          skip two turns and lose their highest peddle; and Utterly wiped out forces the player 
-          to skip two turns and must put all tabled unprotected peddle cards on the wasted pile
-          and must reopen with a new Market Open card.</para></listItem>
-          <listItem><para>Whenever any of these cards are played on the discard pile, each player
-          must pass a card from their hand to their neighbor: this can allow the play of one of
-          the less dangerous Paranoia cards to enable a player to pass on a more dangerous
+          <listItem><para>If any of these cards are played on the <literal>Wasted Pile</literal>,
+          Sold out forces the player to skip a turn and lose their lowest unprotected peddle; Doublecrossed
+          forces the player to skip two turns and lose their highest unprotected peddle; and Utterly wiped
+          out forces the player to skip two turns, put all peddle cards (including unprotected) on the
+          <literal>Wasted Pile</literal> and must reopen with a new Market Open card.</para></listItem>
+          <listItem><para>Whenever any of these cards are played on the <literal>Wasted Pile</literal>,
+          each player must pass a card from their hand to their neighbor: this can allow the play of
+          one of the less dangerous Paranoia cards to enable a player to pass on a more dangerous
           one.</para></listItem>
-          <listItem><para>If the cards are found unplayed in a player's hand at the end of a hand,
-          a score penalty is assessed: $25,000 for Sold out, $50,000 for Doublecrossed, and
-          $100,000 for Utterly wiped out.</para></listItem>
+          <listItem><para>If the cards are found unplayed at the end of a hand, a score penalty is
+          assessed: $25,000 for Sold out, $50,000 for Doublecrossed, and $100,000 for Utterly wiped
+          out.</para></listItem>
         </list>
       </content>
     </section>
