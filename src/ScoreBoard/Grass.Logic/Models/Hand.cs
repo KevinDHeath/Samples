@@ -12,7 +12,7 @@ public class Hand
 	/// <summary>Determines whether the market is open.</summary>
 	public bool MarketIsOpen => Rules.IsMarketOpen( HasslePile );
 
-	/// <summary>Read-only List of all cards currently in hand.</summary>
+	/// <summary>Read-only list of all cards currently in hand.</summary>
 	[System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
 	public IReadOnlyCollection<Card> InHand => Cards.AsReadOnly();
 

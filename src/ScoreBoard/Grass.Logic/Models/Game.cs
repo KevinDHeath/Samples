@@ -31,23 +31,24 @@ public class Game
 	public int Target { get; private set; }
 
 	/// <summary>Game date.</summary>
-	public string Date { get; private set; }
+	public string Date { get; internal set; }
 
 	/// <summary>Current hand number.</summary>
-	public int Hand { get; private set; }
+	public int Hand { get; internal set; }
 
 	/// <summary>Current hand dealer.</summary>
-	public Player Dealer { get; private set; }
+	public Player Dealer { get; internal set; }
 
 	/// <summary>List of players in order of play for the current hand.</summary>
 	public List<Player> PlayOrder { get; private set; }
 
 	/// <summary>Winner of the game.</summary>
 	/// <returns>If the game is not completed <c>null</c> is returned.</returns>
-	public Player? Winner { get; private set; }
+	public Player? Winner { get; internal set; }
 
 	/// <summary>List of cards currently in the wasted pile.</summary>
 	public List<Card> WastedPile { get; private set; } = [];
+
 	internal bool Comment { get; set; }
 
 	internal bool ReversePlay { get; set; }
@@ -87,10 +88,7 @@ public class Game
 		if( Players.Count < 2 || Players.Count > Rules.cMaxNumber ) { return false; } // Check # of players
 
 		if( WastedPile.Count > 0 ) { WastedPile.Clear(); } // Reset wasted pile
-
 		Hand++;
-		Dealer = SetDealer( Dealer, Hand );
-
 		return Deal();
 	}
 
@@ -187,8 +185,14 @@ public class Game
 		bool ok = hand.Cards.Remove( card );
 		if( ok )
 		{
+			// TODO: Need to figure out how to trigger the pass cards function
+			// This should raise an event and the Actor class needs to listen for it
+			//if( card.Type == CardInfo.cParanoia )
+			//{
+			//	Play( player, card );
+			//}
 			WastedPile.Add( card );
-			if( Comment ) { card.AddComment( $" {player.Name} (round {hand.Round})" ); }
+			if( Comment ) { card.AddComment( $"{player.Name} (round {hand.Round})" ); }
 		}
 		return ok;
 	}
@@ -279,11 +283,12 @@ public class Game
 		return dealer;
 	}
 
-	private bool Deal()
+	internal bool Deal()
 	{
+		Dealer = SetDealer( Dealer, Hand );
 		for( int i = 0; i < Rules.cMaxNumber; i++ ) // Cards in hand
 		{
-			foreach( Player player in Players )
+			foreach( Player player in PlayOrder )
 			{
 				if( !Take( player.Current ) ) { return false; };
 			}
@@ -321,6 +326,7 @@ public class Game
 			while( Winner is null )
 			{
 				if( !StartHand() ) { return false; }
+
 				PlayHand();
 				EndHand();
 			}

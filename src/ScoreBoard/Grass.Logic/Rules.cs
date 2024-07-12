@@ -273,11 +273,11 @@ internal class Rules
 				break;
 		}
 
-		string text = $" {player.Name} played (round {hand.Round})";
+		string text = $"{player.Name} played (round {hand.Round})";
 		Card.TransferCard( hand.Cards, game.WastedPile, card );
 		if( comment ) { card.AddComment( text ); }
 
-		text = $" {card.Info.Caption} played (round {hand.Round})";
+		text = $"{card.Info.Caption} played (round {hand.Round})";
 		foreach( Card waste in lose ) // Remove card(s) from stash pile
 		{
 			Card.TransferCard( hand.StashPile, game.WastedPile, waste );
