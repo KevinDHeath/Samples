@@ -1,4 +1,7 @@
-﻿namespace Grass.Logic.Models;
+﻿using System.ComponentModel;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+namespace Grass.Logic.Models;
 
 /// <summary>Provides the details and actions of a Game.</summary>
 public class Game
@@ -15,6 +18,58 @@ public class Game
 		Dealer = SetDealer( null, Hand );
 		PlayOrder = [];
 		ReversePlay = reverse;
+
+		cardsToPass.CollectionChanged += CardsToPassChanged;
+	}
+
+	#endregion
+
+	#region Events
+
+	private EventHandler<PropertyChangedEventArgs>? _gameChanged;
+
+	internal event EventHandler<PropertyChangedEventArgs>? GameChanged
+	{
+		add
+		{
+			int? count = _gameChanged?.GetInvocationList().Length;
+			if( count is null ) { _gameChanged += value; } // Can only have 1 subscriber
+		}
+		remove { _gameChanged -= value; }
+	}
+
+	internal void OnGameChanged( [System.Runtime.CompilerServices.CallerMemberName] string prop = "" )
+	{
+		_gameChanged?.Invoke( this, new PropertyChangedEventArgs( prop ) );
+	}
+
+	private Player? _paranoiaPlayer;
+	internal Player? ParanoiaPlayer
+	{
+		get { return _paranoiaPlayer; }
+		set
+		{
+			if( _paranoiaPlayer != value )
+			{
+				_paranoiaPlayer = value;
+				if( _paranoiaPlayer is not null ) { OnGameChanged(); }
+			}
+		}
+	}
+
+	private readonly ObservableCollection<KeyValuePair<Player, Card>> cardsToPass = [];
+
+	private void CardsToPassChanged( object? sender, NotifyCollectionChangedEventArgs e )
+	{
+		if( e.Action == NotifyCollectionChangedAction.Add )
+		{
+			if( cardsToPass.Count == Players.Count )
+			{
+				Rules.PassCards( this, new( cardsToPass ) );
+				cardsToPass.Clear();
+				ParanoiaPlayer = null;
+			}
+		}
 	}
 
 	#endregion
@@ -52,8 +107,6 @@ public class Game
 	internal bool Comment { get; set; }
 
 	internal bool ReversePlay { get; set; }
-
-	internal Player? ParanoiaPlayer { get; set; } = null;
 
 	internal List<Card> GrassStack { get; set; } = [];
 
@@ -140,8 +193,6 @@ public class Game
 		return;
 	}
 
-	private readonly Dictionary<Player, Card> cardsToPass = [];
-
 	/// <summary>Add card to pass due to paranoia being played.</summary>
 	/// <param name="player">Player object.</param>
 	/// <param name="card">Card object.</param>
@@ -149,26 +200,18 @@ public class Game
 	/// the card is not in the players hand.</returns>
 	public bool AddCardToPass( Player player, Card card )
 	{
-		if( ParanoiaPlayer is null ) { return false; }
-		if( cardsToPass.ContainsKey( player ) ) { return false; }
+		if( ParanoiaPlayer is null || cardsToPass.Count == Players.Count ) { return false; }
+		Dictionary<Player, Card> dict = new( cardsToPass );
+		if( dict.ContainsKey( player ) ) { return false; }
 		if( !player.Current.Cards.Contains( card ) ) { return false; }
-
-		cardsToPass.Add( player, card );
-		if( cardsToPass.Count < Players.Count ) { return true; }
-
-		if( cardsToPass.Count == Players.Count )
-		{
-			Rules.PassCards( this, cardsToPass );
-			ParanoiaPlayer = null;
-			cardsToPass.Clear();
-		}
+		cardsToPass.Add( new KeyValuePair<Player, Card>( player, card ) );
 		return true;
 	}
 
 	/// <summary>Gets the banker for the current round.</summary>
 	/// <returns>The player holding the banker card, or <see langword="null"/>
 	/// if nobody has the card.</returns>
-	[System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
+	[EditorBrowsable( EditorBrowsableState.Never )]
 	public Player? GetBanker() => GetBanker( Players );
 
 	#endregion
@@ -200,10 +243,10 @@ public class Game
 	/// <summary>Play a card in the current hand.</summary>
 	/// <param name="player">Current player.</param>
 	/// <param name="card">Card to play.</param>
-	/// <returns>A <see cref="Grass.Logic.PlayResult" /> object representing the results
+	/// <returns>A <see cref="PlayResult" /> object representing the results
 	/// of the play.</returns>
 	/// <remarks>The <c>null</c> return value is used to indicate success. The result should be compared
-	/// to <see cref="Grass.Logic.PlayResult.Success"/> rather than checking for <c>null</c>.</remarks>
+	/// to <see cref="PlayResult.Success"/> rather than checking for <c>null</c>.</remarks>
 	public PlayResult Play( Player player, Card card ) =>
 		Rules.Play( this, player, card );
 
@@ -212,10 +255,10 @@ public class Game
 	/// <param name="card">Card to play.</param>
 	/// <param name="with">Other player.</param>
 	/// <param name="other">Other players card.</param>
-	/// <returns>A <see cref="Grass.Logic.PlayResult" /> object representing the results
+	/// <returns>A <see cref="PlayResult" /> object representing the results
 	/// of the play.</returns>
 	/// <remarks>The <c>null</c> return value is used to indicate success. The result should be compared
-	/// to <see cref="Grass.Logic.PlayResult.Success"/> rather than checking for <c>null</c>.</remarks>
+	/// to <see cref="PlayResult.Success"/> rather than checking for <c>null</c>.</remarks>
 	public PlayResult Play( Player player, Card card, Player with, Card other ) =>
 		Rules.Play( this, player, card, with, other );
 
@@ -223,10 +266,10 @@ public class Game
 	/// <param name="player">Current player.</param>
 	/// <param name="card">Card to play.</param>
 	/// <param name="peddles">List of peddle cards to protect</param>
-	/// <returns>A <see cref="Grass.Logic.PlayResult" /> object representing the results
+	/// <returns>A <see cref="PlayResult" /> object representing the results
 	/// of the play.</returns>
 	/// <remarks>The <c>null</c> return value is used to indicate success. The result should be compared
-	/// to <see cref="Grass.Logic.PlayResult.Success"/> rather than checking for <c>null</c>.</remarks>
+	/// to <see cref="PlayResult.Success"/> rather than checking for <c>null</c>.</remarks>
 	public PlayResult Protect( Player player, Card card, List<Card> peddles ) =>
 		Rules.Protect( this, player, card, peddles );
 
@@ -316,25 +359,25 @@ public class Game
 	/// <returns><see langword="true"/> if the play completed successfully.</returns>
 	/// <remarks>This method should only be used for testing purposes as it
 	/// automates the decision process of which card to play.</remarks>
-	[System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
+	[EditorBrowsable( EditorBrowsableState.Never )]
 	public bool Play()
 	{
 		//if( !Auto ) { throw new InvalidOperationException( "Auto-play not enabled." ); }
 
 		if( Auto )
 		{
+			Actor actor = new( this );
 			while( Winner is null )
 			{
 				if( !StartHand() ) { return false; }
-
-				PlayHand();
+				PlayHand( actor );
 				EndHand();
 			}
 		}
 		return true;
 	}
 
-	private bool PlayHand()
+	private bool PlayHand( Actor actor )
 	{
 		int round = 0;
 		while( GrassStack.Count > 0 )
@@ -354,7 +397,7 @@ public class Game
 
 				while( hand.Turns >= 0 )
 				{
-					if( !Actor.PlayRound( this, hand ) )
+					if( !actor.Play( hand ) )
 					{
 						if( GrassStack.Count == 0 ) { return true; } // End of grass stack
 						else { return true; } // Market close played

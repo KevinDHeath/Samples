@@ -254,7 +254,6 @@ internal class Rules
 
 	private static bool Paranoia( Game game, Player player, Card card, bool comment )
 	{
-		game.ParanoiaPlayer = player;
 		Hand hand = player.Current;
 		List<Card> lose = [];
 		switch( card.Id )
@@ -293,6 +292,8 @@ internal class Rules
 				if( comment ) { waste.AddComment( text ); }
 			}
 		}
+
+		game.ParanoiaPlayer = player; // This must be done last
 		return true;
 	}
 }

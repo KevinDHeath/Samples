@@ -1,11 +1,56 @@
 ﻿// Ignore Spelling: Feelgood
 using Grass.Logic.Models;
+using System.ComponentModel;
 namespace Grass.Logic;
 
 /// <summary>Auto-play Actor.</summary>
-internal class Actor
+internal class Actor : IDisposable
 {
-	internal static bool PlayRound( Game game, Hand current )
+	#region Constructor and Events
+
+	private readonly Game _game;
+	private bool _disposed;
+
+	internal Actor( Game game )
+	{
+		_game = game;
+		_game.GameChanged += OnParanoiaPlayed;
+	}
+
+	private void OnParanoiaPlayed( object? sender, PropertyChangedEventArgs e )
+	{
+		if( sender is Game game && e.PropertyName is not null )
+		{
+			if( e.PropertyName == nameof( Game.ParanoiaPlayer ) && game.ParanoiaPlayer is not null )
+			{
+				foreach( Player player in game.Players )
+				{
+					// Assume the paranoia card is already played
+					Card worst = Decision.GetWorstCard( player.Current.Cards );
+					game.AddCardToPass( player, worst );
+				}
+			}
+		}
+	}
+
+	internal bool Play( Hand current )
+	{
+		return PlayRound( _game, current );
+	}
+
+	/// <inheritdoc/>
+	[EditorBrowsable( EditorBrowsableState.Never )]
+	public void Dispose()
+	{
+		if( _disposed ) return;
+		_game.GameChanged -= OnParanoiaPlayed;
+		_disposed = true;
+		GC.SuppressFinalize( this );
+	}
+
+	#endregion
+
+	private static bool PlayRound( Game game, Hand current )
 	{
 		#region Populate decision data
 
@@ -140,15 +185,6 @@ internal class Actor
 		if( card is null ) { return null; }
 
 		PlayResult res = game.Play( data.Player, card );
-
-		foreach( Player player in game.Players )
-		{
-			Card worst = Decision.GetWorstCard( player.Current.Cards );
-			game.AddCardToPass( player, worst );
-		}
-
-		//if( data.DrFeelgood ) { Decision.FeelgoodInPlay = data.Player; }
-
 		return res == PlayResult.Success ? card : null;
 	}
 
