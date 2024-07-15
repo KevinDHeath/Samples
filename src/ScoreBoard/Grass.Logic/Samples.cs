@@ -3,13 +3,21 @@ namespace Grass.Logic;
 
 /// <summary>Static Game</summary>
 [System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
-public static class Samples
+public class Samples : PassCardHandler
 {
-	private static readonly Game sGame = Game.Setup( SamplePlayers() );
+	private static Game sGame = default!;
+
+	internal Samples( Game game )
+	{
+		sGame = game;
+		sGame.GameChanged += OnParanoiaPlayed;
+	}
 
 	/// <summary>Populate data</summary>
 	public static Game Populate( bool endgame = false )
 	{
+		Samples samples = new( Game.Setup( SamplePlayers() ) );
+
 		sGame.Date = "July 9, 2024 10:31 PM";
 		Player? dealer = sGame.Players.FirstOrDefault( p => p.Name == "Bob" );
 		if( dealer is not null ) { sGame.Dealer = dealer; }
@@ -129,14 +137,8 @@ public static class Samples
 		Hand hand = janis.Current;
 		hand.Round = round;
 		sGame.Take( hand, CardInfo.cLustConquers ); // Pick-up
-		Transfer( hand.Cards, sGame.WastedPile, CardInfo.cSoldout, "Janis played (round 14)" ); // Play
-		Transfer( hand.StashPile, sGame.WastedPile, CardInfo.cMexico, "Janis played Sold out (round 14)" ); // Lose
-
-		// Pass cards
-		Transfer( hand.Cards, john.Current.Cards, CardInfo.cOffFelony, "passed by Janis to John (round 14)" );
-		Transfer( john.Current.Cards, amy.Current.Cards, CardInfo.cOffDetained, "passed by John to Amy (round 14)" );
-		Transfer( amy.Current.Cards, bob.Current.Cards, CardInfo.cDoublecross, "passed by Amy to Bob (round 14)" );
-		Transfer( bob.Current.Cards, hand.Cards, CardInfo.cOffDetained, "passed by Bob to Janis (round 14)" );
+		Card? card = hand.Cards.FirstOrDefault( c => c.Id == CardInfo.cSoldout );
+		if( card is not null ) { _ = sGame.Play( janis, card ); }
 
 		hand = john.Current;
 		hand.Round = round;
@@ -146,12 +148,8 @@ public static class Samples
 		hand = amy.Current;
 		hand.Round = round;
 		sGame.Take( hand, CardInfo.cSteal ); // Pick-up (turn 1)
-		Transfer( hand.Cards, hand.StashPile, CardInfo.cEuphoria,
-			"Bob: 100,000, Janis: 25,000, John: 50,000 (round 14)" ); // Play (turn 1)
-		Transfer( bob.Current.StashPile, hand.StashPile, CardInfo.cDrFeelgood );
-		Transfer( janis.Current.StashPile, hand.StashPile, CardInfo.cColumbia );
-		Transfer( john.Current.StashPile, hand.StashPile, CardInfo.cPanama );
-
+		card = hand.Cards.FirstOrDefault( c => c.Id == CardInfo.cEuphoria );
+		if( card is not null ) { _ = sGame.Play( amy, card ); } // Play (turn 1)
 		sGame.Take( hand, CardInfo.cOnFelony ); // Pick-up (turn 2)
 		Transfer( hand.Cards, hand.HasslePile, CardInfo.cClose, "(round 14)" ); // Play (turn 2)
 

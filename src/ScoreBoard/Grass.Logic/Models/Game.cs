@@ -235,7 +235,7 @@ public class Game
 			//	Play( player, card );
 			//}
 			WastedPile.Add( card );
-			if( Comment ) { card.AddComment( $"{player.Name} (round {hand.Round})" ); }
+			if( Comment ) { card.AddComment( $"{player.Name} discard (round {hand.Round})" ); }
 		}
 		return ok;
 	}
@@ -247,8 +247,7 @@ public class Game
 	/// of the play.</returns>
 	/// <remarks>The <c>null</c> return value is used to indicate success. The result should be compared
 	/// to <see cref="PlayResult.Success"/> rather than checking for <c>null</c>.</remarks>
-	public PlayResult Play( Player player, Card card ) =>
-		Rules.Play( this, player, card );
+	public PlayResult Play( Player player, Card card ) => Rules.Play( this, player, card );
 
 	/// <summary>Play a card in the current hand with another player.</summary>
 	/// <param name="player">Current player.</param>
@@ -294,6 +293,22 @@ public class Game
 		bool rtn = GrassStack.Remove( card );
 		if( rtn ) { hand.Cards.Add( card ); }
 		return rtn;
+	}
+
+	internal PlayResult CheckState( Card card )
+	{
+		if( Winner is not null ) // Game over
+		{
+			if( _gameChanged is not null ) { _gameChanged = null; } // Clear all subscribers
+			return new( "The game is over!" );
+		}
+		else if( card.Type is CardInfo.cParanoia )
+		{
+			int? count = _gameChanged?.GetInvocationList().Length; // Must be 1 listener
+			if( count is null ) { return new( "Nothing is listening for card passing!" ); }
+		}
+
+		return PlayResult.Success!;
 	}
 
 	#endregion

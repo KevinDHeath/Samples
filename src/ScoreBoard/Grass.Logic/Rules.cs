@@ -75,12 +75,13 @@ internal class Rules
 	// Single player
 	internal static PlayResult Play( Game game, Player player, Card card )
 	{
-		bool comment = game.Comment;
-		if( game.Winner is not null ) { return new( "The game is over!" ); }
+		PlayResult res = game.CheckState( card );
+		if( res != PlayResult.Success ) { return res; }
 		Hand hand = player.Current;
-		PlayResult res = CanPlay( hand, card );
+		res = CanPlay( hand, card );
 		if( res != PlayResult.Success ) { return res; }
 
+		bool comment = game.Comment;
 		bool ok;
 		switch( card.Type )
 		{
@@ -98,7 +99,7 @@ internal class Rules
 					{
 						Card fine = hand.LowestUnProtected;
 						Card.TransferCard( hand.StashPile, game.WastedPile, fine );
-						if( ok & comment ) { fine.AddComment( $" {player.Name} paid fine (round {hand.Round})" ); }
+						if( ok & comment ) { fine.AddComment( $"{player.Name} paid fine (round {hand.Round})" ); }
 					}
 					if( ok ) { return res; }
 				}
@@ -126,6 +127,9 @@ internal class Rules
 	// Multi player
 	internal static PlayResult Play( Game game, Player player, Card card, Player with, Card other )
 	{
+		PlayResult res = game.CheckState( card );
+		if( res != PlayResult.Success ) { return res; }
+
 		bool comment = game.Comment;
 		Hand hand = player.Current;
 		Hand wHand = with.Current;
@@ -164,35 +168,13 @@ internal class Rules
 		return PlayResult.Success!;
 	}
 
-	internal static void PassCards( Game game, Dictionary<Player, Card> cardsToPass )
-	{
-		if( game.ParanoiaPlayer is null ) { return; }
-		Player player = game.ParanoiaPlayer;
-
-		// Pass in order of play starting with the paranoia player
-		int start = game.PlayOrder.FindIndex( x => x == player );
-		int count = 0;
-		for( int i = start; count < game.PlayOrder.Count; i++ )
-		{
-			count++;
-			if( i == game.PlayOrder.Count ) { i = 0; }
-			Player from = game.PlayOrder[i];
-			Card pass = cardsToPass[from];
-
-			int next = i + 1;
-			if( next == game.PlayOrder.Count ) { next = 0; }
-			Player to = game.PlayOrder[next];
-
-			Card.TransferCard( from.Current.Cards, to.Current.Cards, pass );
-			if( game.Comment ) { pass.AddComment( $"passed by {from.Name} to {to.Name} (round {player.Current.Round})" ); }
-		}
-	}
-
 	internal static PlayResult Protect( Game game, Player player, Card card, List<Card> peddles )
 	{
 		if( card.Type != CardInfo.cProtection ) { return new( "Card is not protection." ); }
+		PlayResult res = game.CheckState( card );
+		if( res != PlayResult.Success ) { return res; }
 		Hand hand = player.Current;
-		PlayResult res = CanPlay( hand, card );
+		res = CanPlay( hand, card );
 		if( res != PlayResult.Success ) { return res; }
 
 		IEnumerable<Card> cards = peddles.Where( c => c.Type != CardInfo.cPeddle );
@@ -293,7 +275,31 @@ internal class Rules
 			}
 		}
 
-		game.ParanoiaPlayer = player; // This must be done last
+		game.ParanoiaPlayer = player; // Done this last as it triggers the populating cards to pass
 		return true;
+	}
+
+	internal static void PassCards( Game game, Dictionary<Player, Card> cardsToPass )
+	{
+		if( game.ParanoiaPlayer is null ) { return; }
+		Player player = game.ParanoiaPlayer;
+
+		// Pass in order of play starting with the paranoia player
+		int start = game.PlayOrder.FindIndex( x => x == player );
+		int count = 0;
+		for( int i = start; count < game.PlayOrder.Count; i++ )
+		{
+			count++;
+			if( i == game.PlayOrder.Count ) { i = 0; }
+			Player from = game.PlayOrder[i];
+			Card pass = cardsToPass[from];
+
+			int next = i + 1;
+			if( next == game.PlayOrder.Count ) { next = 0; }
+			Player to = game.PlayOrder[next];
+
+			Card.TransferCard( from.Current.Cards, to.Current.Cards, pass );
+			if( game.Comment ) { pass.AddComment( $"passed by {from.Name} to {to.Name} (round {player.Current.Round})" ); }
+		}
 	}
 }
