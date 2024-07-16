@@ -1,4 +1,4 @@
-﻿// Ignore Spelling: Feelgood
+// Ignore Spelling: Feelgood
 using Grass.Logic.Models;
 namespace Grass.Logic;
 
@@ -134,8 +134,8 @@ internal class Actor : PassCardHandler
 
 		PlayResult res = Rules.CanPlay( data.Player.Current, card );
 		if( res != PlayResult.Success ) { return null; } // Cannot play
-
-		res = game.Protect( data.Player, card, peddles );
+		res = Rules.Protect( game, data.Player, card, peddles );
+		//res = game.Protect( data.Player, card, peddles );
 		return res == PlayResult.Success ? card : null;
 	}
 

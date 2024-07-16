@@ -3,24 +3,17 @@ namespace Grass.Logic;
 
 /// <summary>Static Game</summary>
 [System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
-public class Samples : PassCardHandler
+public class Samples
 {
 	private static Game sGame = default!;
 
-	internal Samples( Game game )
-	{
-		sGame = game;
-		sGame.GameChanged += OnParanoiaPlayed;
-	}
-
 	/// <summary>Populate data</summary>
-	public static Game Populate( bool endgame = false )
+	public static Game Populate( GameService service, bool endgame = false )
 	{
-		Samples samples = new( Game.Setup( SamplePlayers() ) );
-
+		sGame = service._game;
 		sGame.Date = "July 9, 2024 10:31 PM";
-		Player? dealer = sGame.Players.FirstOrDefault( p => p.Name == "Bob" );
-		if( dealer is not null ) { sGame.Dealer = dealer; }
+		Player? dealer = service._game.Players.FirstOrDefault( p => p.Name == "Bob" );
+		if( dealer is not null ) { service._game.Dealer = dealer; }
 		sGame.StartHand();
 
 		// Put dealt cards back in the stack
@@ -190,13 +183,6 @@ public class Samples : PassCardHandler
 			}
 		}
 	}
-
-	private static List<Player> SamplePlayers() => [
-			new( "Janis" ),
-			new( "John" ),
-			new( "Amy" ),
-			new( "Bob" ),
-		];
 
 	#endregion
 

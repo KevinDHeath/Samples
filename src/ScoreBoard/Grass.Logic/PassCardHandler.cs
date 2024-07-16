@@ -1,9 +1,8 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using Grass.Logic.Models;
 namespace Grass.Logic;
 
-/// <summary>Class to provide the ability to pass cards.</summary>
-[EditorBrowsable( EditorBrowsableState.Never )]
+/// <summary>Class providing the ability to pass cards from one player to the next.</summary>
 public abstract class PassCardHandler : IDisposable
 {
 	/// <summary>Default event handler for paranoia played.</summary>
@@ -26,5 +25,6 @@ public abstract class PassCardHandler : IDisposable
 	}
 
 	/// <inheritdoc/>
+	[EditorBrowsable( EditorBrowsableState.Never )]
 	public virtual void Dispose() => GC.SuppressFinalize( this );
 }

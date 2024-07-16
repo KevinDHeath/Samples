@@ -1,4 +1,4 @@
-﻿using Grass.Logic;
+using Grass.Logic;
 using Grass.Logic.Models;
 using System.Text;
 

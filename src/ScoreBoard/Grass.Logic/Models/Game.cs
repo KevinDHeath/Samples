@@ -1,14 +1,14 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 namespace Grass.Logic.Models;
 
-/// <summary>Provides the details and actions of a Game.</summary>
+/// <summary>Provides the details of a Game.</summary>
 public class Game
 {
 	#region Constructor
 
-	private Game( List<Player> players, int target, bool reverse, bool comment, bool auto )
+	internal Game( List<Player> players, int target, bool reverse, bool comment, bool auto )
 	{
 		Players = players;
 		Target = target;
@@ -80,6 +80,7 @@ public class Game
 	public int StackCount => GrassStack.Count;
 
 	/// <summary>List of players in the game.</summary>
+	[EditorBrowsable( EditorBrowsableState.Never )]
 	public List<Player> Players { get; private set; }
 
 	/// <summary>Game target value.</summary>
@@ -88,20 +89,20 @@ public class Game
 	/// <summary>Game date.</summary>
 	public string Date { get; internal set; }
 
-	/// <summary>Current hand number.</summary>
+	/// <summary>Number of hands.</summary>
 	public int Hand { get; internal set; }
 
-	/// <summary>Current hand dealer.</summary>
+	/// <summary>Current dealer.</summary>
 	public Player Dealer { get; internal set; }
 
-	/// <summary>List of players in order of play for the current hand.</summary>
+	/// <summary>List of players in order of play.</summary>
 	public List<Player> PlayOrder { get; private set; }
 
 	/// <summary>Winner of the game.</summary>
-	/// <returns>If the game is not completed <c>null</c> is returned.</returns>
+	/// <returns>If the game is not completed the value is <c>null</c>.</returns>
 	public Player? Winner { get; internal set; }
 
-	/// <summary>List of cards currently in the wasted pile.</summary>
+	/// <summary>List of cards in the wasted pile.</summary>
 	public List<Card> WastedPile { get; private set; } = [];
 
 	internal bool Comment { get; set; }
@@ -114,27 +115,20 @@ public class Game
 
 	#region Public Methods
 
-	/// <summary>Initializes a new instance of the Game class.</summary>
-	/// <param name="players">List of players in the game.</param>
-	/// <param name="target">Target for the game. The default is $250,000</param>
-	/// <param name="reverse">Indicates whether to reverse the play order ever alternate deal.
-	/// The default is <c>false</c>.</param>
-	/// <param name="comment">Indicates whether to add card comments. The default is <c>true</c>.</param>
-	/// <param name="auto">Indicates whether to use auto-play. The default is <c>false</c>.
-	/// <br/><b>Note:</b><i> This should only be set as <c>true</c> for testing purposes
-	/// as it automates the decision process of which card each player will play.</i></param>
-	/// <returns>An initialized game of Grass.</returns>
-	public static Game Setup( List<Player> players, int target = 250000,
-		bool reverse = false, bool comment = true, bool auto = false )
-	{
-		Game game = new( players, target, reverse, comment, auto );
-		return game;
-	}
+	/// <summary>Gets the banker for the current round.</summary>
+	/// <returns>The player holding the banker card, or <see langword="null"/>
+	/// if nobody has the card.</returns>
+	[EditorBrowsable( EditorBrowsableState.Never )]
+	public Player? GetBanker() => GetBanker( Players );
+
+	#endregion
+
+	#region Internal Methods
 
 	/// <summary>Start a hand of the game.</summary>
 	/// <returns><see langword="true"/> if the hand was successfully started.</returns>
 	/// <remarks>There must be 104 cards and 2-6 players to play a game.</remarks>
-	public bool StartHand()
+	internal bool StartHand()
 	{
 		GrassStack = CardInfo.BuildStack();
 		if( GrassStack.Count != Rules.cCardTotal ) { return false; } // Check # of cards
@@ -148,7 +142,7 @@ public class Game
 	/// <summary>End a hand of the game.</summary>
 	/// <remarks>Calculates the net scores for each player, assigns the bonus to the player
 	/// with the highest net score, and checks if there is a winner of the game.</remarks>
-	public void EndHand()
+	internal void EndHand()
 	{
 		// Calculate net scores
 		Player? banker = GetBanker();
@@ -193,12 +187,7 @@ public class Game
 		return;
 	}
 
-	/// <summary>Add card to pass due to paranoia being played.</summary>
-	/// <param name="player">Player object.</param>
-	/// <param name="card">Card object.</param>
-	/// <returns><see langword="false"/> if the player has already added a card or
-	/// the card is not in the players hand.</returns>
-	public bool AddCardToPass( Player player, Card card )
+	internal bool AddCardToPass( Player player, Card card )
 	{
 		if( ParanoiaPlayer is null || cardsToPass.Count == Players.Count ) { return false; }
 		Dictionary<Player, Card> dict = new( cardsToPass );
@@ -208,21 +197,7 @@ public class Game
 		return true;
 	}
 
-	/// <summary>Gets the banker for the current round.</summary>
-	/// <returns>The player holding the banker card, or <see langword="null"/>
-	/// if nobody has the card.</returns>
-	[EditorBrowsable( EditorBrowsableState.Never )]
-	public Player? GetBanker() => GetBanker( Players );
-
-	#endregion
-
-	#region Action Methods
-
-	/// <summary>Discard a card.</summary>
-	/// <param name="player">Current player.</param>
-	/// <param name="card">Card to discard.</param>
-	/// <returns><see langword="true"/> if the card is successfully discarded.</returns>
-	public bool Discard( Player player, Card card )
+	internal bool Discard( Player player, Card card )
 	{
 		Hand hand = player.Current;
 		bool ok = hand.Cards.Remove( card );
@@ -240,43 +215,15 @@ public class Game
 		return ok;
 	}
 
-	/// <summary>Play a card in the current hand.</summary>
-	/// <param name="player">Current player.</param>
-	/// <param name="card">Card to play.</param>
-	/// <returns>A <see cref="PlayResult" /> object representing the results
-	/// of the play.</returns>
-	/// <remarks>The <c>null</c> return value is used to indicate success. The result should be compared
-	/// to <see cref="PlayResult.Success"/> rather than checking for <c>null</c>.</remarks>
-	public PlayResult Play( Player player, Card card ) => Rules.Play( this, player, card );
+	internal PlayResult Play( Player player, Card card ) => Rules.Play( this, player, card );
 
-	/// <summary>Play a card in the current hand with another player.</summary>
-	/// <param name="player">Current player.</param>
-	/// <param name="card">Card to play.</param>
-	/// <param name="with">Other player.</param>
-	/// <param name="other">Other players card.</param>
-	/// <returns>A <see cref="PlayResult" /> object representing the results
-	/// of the play.</returns>
-	/// <remarks>The <c>null</c> return value is used to indicate success. The result should be compared
-	/// to <see cref="PlayResult.Success"/> rather than checking for <c>null</c>.</remarks>
-	public PlayResult Play( Player player, Card card, Player with, Card other ) =>
+	internal PlayResult Play( Player player, Card card, Player with, Card other ) =>
 		Rules.Play( this, player, card, with, other );
 
-	/// <summary>Protect peddle cards.</summary>
-	/// <param name="player">Current player.</param>
-	/// <param name="card">Card to play.</param>
-	/// <param name="peddles">List of peddle cards to protect</param>
-	/// <returns>A <see cref="PlayResult" /> object representing the results
-	/// of the play.</returns>
-	/// <remarks>The <c>null</c> return value is used to indicate success. The result should be compared
-	/// to <see cref="PlayResult.Success"/> rather than checking for <c>null</c>.</remarks>
-	public PlayResult Protect( Player player, Card card, List<Card> peddles ) =>
+	internal PlayResult Protect( Player player, Card card, List<Card> peddles ) =>
 		Rules.Protect( this, player, card, peddles );
 
-	/// <summary>Take the next card from the stack.</summary>
-	/// <param name="hand">Current player hand to add the card to.</param>
-	/// <returns><see langword="true"/> if the card is successfully taken
-	/// from the stack and added to the players hand.</returns>
-	public bool Take( Hand hand )
+	internal bool Take( Hand hand )
 	{
 		if( GrassStack.Count == 0 ) { return false; }
 		Card card = GrassStack[^1];
@@ -370,29 +317,21 @@ public class Game
 
 	internal bool Auto { get; set; }
 
-	/// <summary>Automatically plays a game.</summary>
-	/// <returns><see langword="true"/> if the play completed successfully.</returns>
-	/// <remarks>This method should only be used for testing purposes as it
-	/// automates the decision process of which card to play.</remarks>
-	[EditorBrowsable( EditorBrowsableState.Never )]
-	public bool Play()
+	internal bool Play()
 	{
-		//if( !Auto ) { throw new InvalidOperationException( "Auto-play not enabled." ); }
-		if( Winner is not null ) { return true; } // Game already played
-		if( Auto )
+		if( Winner is not null ) { return true; } // Game already completed
+		Actor? actor = Auto ? new( this ) : null;
+
+		while( Winner is null )
 		{
-			Actor actor = new( this );
-			while( Winner is null )
-			{
-				if( !StartHand() ) { return false; }
-				PlayHand( actor );
-				EndHand();
-			}
+			if( !StartHand() ) { return false; }
+			if( actor is not null ) { PlayHand( actor ); }
+			EndHand();
 		}
 		return true;
 	}
 
-	private bool PlayHand( Actor actor )
+	private bool PlayHand( Actor? actor )
 	{
 		int round = 0;
 		while( GrassStack.Count > 0 )
@@ -412,7 +351,9 @@ public class Game
 
 				while( hand.Turns >= 0 )
 				{
-					if( !actor.Play( hand ) )
+					bool played = false;  // TODO: card must be played real-time
+					if( actor is not null ) { played = actor.Play( hand ); }
+					if( !played )
 					{
 						if( GrassStack.Count == 0 ) { return true; } // End of grass stack
 						else { return true; } // Market close played

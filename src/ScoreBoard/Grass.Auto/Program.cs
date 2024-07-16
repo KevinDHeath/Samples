@@ -1,5 +1,6 @@
-﻿using Grass.Logic.Models;
 using System.Diagnostics;
+using Grass.Logic;
+using Grass.Logic.Models;
 namespace Grass.Auto;
 
 internal class Program
@@ -8,19 +9,24 @@ internal class Program
 
 	static void Main()
 	{
-		Game game = Game.Setup( Logic.Samples.GetPlayers(), auto: true, comment: true,
+		Game game = GameService.Setup( Samples.GetPlayers(), auto: true, comment: true,
 			reverse: true );
 		try
 		{
-			//Game sample = Logic.Samples.Populate( endgame: true );
+			GameService svc = new( game );
+			//Game sample = Samples.Populate( svc, endgame: true ); // endgame:false will cause issue
 
 			sStopWatch.Start();
-			if( !AutoPlayAsync( game ).Result ) { Console.WriteLine( "Failed to successfully auto-play game." ); }
+			if( !AutoPlayAsync( svc ).Result ) { Console.WriteLine( "Failed to successfully auto-play game." ); }
 			else
 			{
 				sStopWatch.Stop();
-				Logic.Samples.ShowResults( game );
+				Samples.ShowResults( game );
 				//HtmlBuilder.CreateHtml( game );
+
+				//Summary summary = Summary.BuildSummary( game );
+				//string json = System.Text.Json.JsonSerializer.Serialize( summary );
+				//Summary? obj = System.Text.Json.JsonSerializer.Deserialize<Summary>( json );
 			}
 		}
 		catch( Exception ex ) { Console.WriteLine( ex.ToString() ); }
@@ -36,9 +42,9 @@ internal class Program
 		}
 	}
 
-	private static async Task<bool> AutoPlayAsync( Game game )
+	private static async Task<bool> AutoPlayAsync( GameService svc )
 	{
-		Task<bool> task = new Logic.GameService( game ).PlayAsync();
+		Task<bool> task = svc.GameAsync();
 		// Do some other work if required
 		return await task;
 	}
