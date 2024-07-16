@@ -1,5 +1,4 @@
-﻿using Grass.Logic.Models;
-using static System.Net.WebRequestMethods;
+using Grass.Logic.Models;
 namespace Grass.Logic;
 
 /// <summary>Game service.</summary>
