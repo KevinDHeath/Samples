@@ -15,7 +15,7 @@ internal class Program
 			//Game sample = Logic.Samples.Populate( endgame: true );
 
 			sStopWatch.Start();
-			if( !game.Play() ) { Console.WriteLine( "Failed to successfully auto-play game." ); }
+			if( !AutoPlayAsync( game ).Result ) { Console.WriteLine( "Failed to successfully auto-play game." ); }
 			else
 			{
 				sStopWatch.Stop();
@@ -34,5 +34,12 @@ internal class Program
 				_ = Console.Read();
 			}
 		}
+	}
+
+	private static async Task<bool> AutoPlayAsync( Game game )
+	{
+		Task<bool> task = new Logic.GameService( game ).PlayAsync();
+		// Do some other work if required
+		return await task;
 	}
 }

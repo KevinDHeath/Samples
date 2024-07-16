@@ -183,10 +183,10 @@ public class Game
 		{
 			if( player.Total > high ) { high = player.Total; Winner = player; }
 		}
-
-		// If no winner reset for the next hand
-		if( Winner is null )
+		if( Winner is not null ) { _gameChanged = null; } // Clear paranoia play listener
+		else
 		{
+			// If no winner reset for the next hand
 			foreach( Player player in Players ) { player.ResetCurrent(); }
 			if( bonus is not null ) { Dealer = bonus; }
 		}
@@ -378,7 +378,7 @@ public class Game
 	public bool Play()
 	{
 		//if( !Auto ) { throw new InvalidOperationException( "Auto-play not enabled." ); }
-
+		if( Winner is not null ) { return true; } // Game already played
 		if( Auto )
 		{
 			Actor actor = new( this );
