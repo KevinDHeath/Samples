@@ -1,6 +1,8 @@
 ﻿@page "/weather"
-@inject IWeatherForecastService WeatherService
+@using ClassLibrary.Services
+@using ClassLibrary.Models
 @attribute [StreamRendering]
+@inject IWeatherForecastService WeatherService
 
 <PageTitle>Weather</PageTitle>
 

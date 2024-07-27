@@ -1,6 +1,7 @@
 ﻿@page "/MovieReview/{Id}"
+@using ClassLibrary.Services
+@using ClassLibrary.Models
 @attribute [StreamRendering(true)]
-
 @inject IMovieReviewService MovieReviewService
 
 <h3>Movie Review for @MovieItem?.Title</h3>

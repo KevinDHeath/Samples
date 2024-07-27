@@ -4,6 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
 *[Nn]otes.txt
+*.docx
 *.zip
 *.pdf
 src/ScoreBoard/samples/

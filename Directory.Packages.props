@@ -6,41 +6,37 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- ASPNETCoreWebAPI -->
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.6.2" />
-    <!-- Transitive, referenced by Swashbuckle.AspNetCore -->
-    <PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="8.0.6" />
-    <PackageVersion Include="Microsoft.OpenApi" Version="1.6.15" />
+    <!-- These packages have at least one vulnerability with high severity -->
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />                                      <!-- 03/2023 -->
+    <PackageVersion Include="System.Text.Json" Version="8.0.4" />                                      <!-- 07/2024 -->
+
+    <!-- These packages have at least one update -->
+    <PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="8.0.7" />            <!-- 07/2024 -->
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" /> <!-- 03/2024 -->
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />             <!-- 03/2024 -->
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="8.0.2" />                          <!-- 02/2024 -->
+    <PackageVersion Include="Microsoft.OpenApi" Version="1.6.15" />                                    <!-- 06/2024 -->
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.6.2" />                                <!-- 05/2024 -->
+    <PackageVersion Include="System.Memory" Version="4.5.5" />                                         <!-- 05/2022 -->
+
+    <!-- .NET 8.0 -->
+    <PackageVersion Include="System.Collections.Immutable" Version="8.0.0" />
+    <PackageVersion Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+    <PackageVersion Include="System.Diagnostics.EventLog" Version="8.0.0" />
+    <PackageVersion Include="System.Reflection.Metadata" Version="8.0.0" />
+    <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- Unit Testing -->
+    <PackageVersion Include="xunit" Version="2.9.0" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
     <PackageVersion Include="FluentAssertions" Version="6.12.0" />
-    <!-- Transitive, referenced by FluentAssertions -->
-    <PackageVersion Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
-    <PackageVersion Include="System.Diagnostics.EventLog" Version="8.0.0" />
-    <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
-
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
-    <!-- Transitive, referenced by Microsoft.NET.Test.Sdk -->
-    <PackageVersion Include="Microsoft.CodeCoverage" Version="17.10.0" />
-    <PackageVersion Include="Microsoft.TestPlatform.TestHost" Version="17.10.0" />
-    <!-- Transitive, referenced by Microsoft.TestPlatform.TestHost -->
-    <PackageVersion Include="Microsoft.TestPlatform.ObjectModel" Version="17.10.0" />
-    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
-    <!-- Transitive, referenced by Microsoft.TestPlatform.ObjectModel -->
+
+    <!-- Transitive, referenced by Microsoft.TestPlatform.ObjectModel ?? -->
     <PackageVersion Include="NuGet.Frameworks" Version="6.10.1" />
-    <PackageVersion Include="System.Collections.Immutable" Version="8.0.0" />
-    <PackageVersion Include="System.Reflection.Metadata" Version="8.0.0" />
-
-    <PackageVersion Include="xunit" Version="2.8.1" />
-    <!-- Transitive, referenced by xUnit -->
-    <PackageVersion Include="xunit.abstractions" Version="2.0.3" />
-    <PackageVersion Include="xunit.analyzers" Version="1.14.0" />
-    <PackageVersion Include="xunit.assert" Version="2.8.1" />
-
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.1" />
   </ItemGroup>
 
 </Project>
