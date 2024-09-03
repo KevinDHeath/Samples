@@ -6,8 +6,7 @@
 *[Nn]otes.txt
 *.docx
 *.zip
-*.pdf
-src/ScoreBoard/samples/
+*.db*
 
 # User-specific files
 *.rsuser
