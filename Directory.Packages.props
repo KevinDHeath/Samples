@@ -11,15 +11,15 @@
     <PackageVersion Include="System.Text.Json" Version="8.0.4" />                                      <!-- 07/2024 -->
 
     <!-- These packages have at least one update -->
-    <PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="8.0.7" />            <!-- 07/2024 -->
+    <PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="8.0.8" />            <!-- 08/2024 -->
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" /> <!-- 03/2024 -->
     <PackageVersion Include="Microsoft.Extensions.DependencyModel" Version="8.0.1" />                  <!-- 07/2024 -->
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />             <!-- 03/2024 -->
     <PackageVersion Include="Microsoft.Extensions.Options" Version="8.0.2" />                          <!-- 02/2024 -->
-    <PackageVersion Include="Microsoft.OpenApi" Version="1.6.15" />                                    <!-- 06/2024 -->
+    <PackageVersion Include="Microsoft.OpenApi" Version="1.6.18" />                                    <!-- 08/2024 -->
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />                                      <!-- 03/2023 -->
-    <PackageVersion Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.8" />                         <!-- 02/2024 -->
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.6.2" />                                <!-- 05/2024 -->
+    <PackageVersion Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.9" />                         <!-- 08/2024 -->
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.7.3" />                                <!-- 08/2024 -->
     <PackageVersion Include="System.Memory" Version="4.5.5" />                                         <!-- 05/2022 -->
 
     <!-- .NET 8.0 -->
@@ -32,9 +32,9 @@
 
   <ItemGroup>
     <!-- ASP.NET Core Identity / Entity Framework Core -->
-    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.7" />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.7" />
+    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.8" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.8" />
 
     <!-- Entity Framework Core Design -->
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.10.0" />
@@ -50,10 +50,10 @@
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
     <PackageVersion Include="FluentAssertions" Version="6.12.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
 
     <!-- Transitive, referenced by Microsoft.TestPlatform.ObjectModel ?? -->
-    <PackageVersion Include="NuGet.Frameworks" Version="6.10.1" />
+    <PackageVersion Include="NuGet.Frameworks" Version="6.11.0" />
   </ItemGroup>
 
 </Project>
