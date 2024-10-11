@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <!-- These packages have at least one vulnerability with high severity -->
-    <PackageVersion Include="System.Text.Json" Version="8.0.4" />                                      <!-- 07/2024 -->
+    <PackageVersion Include="System.Text.Json" Version="8.0.5" />                                      <!-- 10/2024 -->
 
     <!-- These packages have at least one update -->
     <PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="8.0.8" />            <!-- 08/2024 -->
@@ -21,12 +21,12 @@
     <PackageVersion Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.9" />                         <!-- 08/2024 -->
     <PackageVersion Include="SQLitePCLRaw.core" Version="2.1.9" />                                     <!-- 08/2024 -->
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.8.1" />                                <!-- 08/2024 -->
+    <PackageVersion Include="System.Configuration.ConfigurationManager" Version="8.0.1" />             <!-- 10/2024 -->
+    <PackageVersion Include="System.Diagnostics.EventLog" Version="8.0.1" />                           <!-- 10/2024 -->
     <PackageVersion Include="System.Memory" Version="4.5.5" />                                         <!-- 05/2022 -->
 
     <!-- .NET 8.0 -->
     <PackageVersion Include="System.Collections.Immutable" Version="8.0.0" />
-    <PackageVersion Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
-    <PackageVersion Include="System.Diagnostics.EventLog" Version="8.0.0" />
     <PackageVersion Include="System.Reflection.Metadata" Version="8.0.0" />
     <PackageVersion Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
   </ItemGroup>
